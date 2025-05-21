@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from workspaces.models import Workspace as workspace
 
 class Note(models.Model):
     title = models.CharField(max_length=200)  
@@ -10,10 +11,11 @@ class Note(models.Model):
         related_name='notes'
     )  
 
-    group_id = models.IntegerField(
+    workspace = models.ForeignKey(
+        workspace,
+        on_delete=models.CASCADE,
         null=True,
-        blank=True
-    )  
+    )
 
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True) 

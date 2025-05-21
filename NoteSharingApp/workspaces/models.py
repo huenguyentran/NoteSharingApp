@@ -30,6 +30,9 @@ class WorkspaceMember(models.Model):
         default='view'
     )
 
+    def __str__(self):
+        return self.user.username + " in " + self.workspace.name    
+
 class WorkspaceFile(models.Model):
     workspace = models.ForeignKey(
         Workspace, 
@@ -45,3 +48,6 @@ class WorkspaceFile(models.Model):
         'auth.User', 
         on_delete=models.CASCADE
     )
+    
+    def __str__(self):
+        return self.file.name
