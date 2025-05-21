@@ -9,13 +9,11 @@ class Note(models.Model):
         on_delete=models.CASCADE,
         related_name='notes'
     )  
-    # Người tạo ghi chú (ForeignKey đến User)
 
     group_id = models.IntegerField(
         null=True,
         blank=True
     )  
-    # ID nhóm (có thể NULL nếu là ghi chú cá nhân)
 
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True) 
@@ -23,3 +21,45 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
+    
+class NoteShare(models.Model):
+    note = models.ForeignKey(
+        Note, 
+        on_delete=models.CASCADE
+    )
+    share_by = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE,
+        related_name='share_sender'
+    )
+    share_with = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE,
+        related_name='share_receiver'
+    )
+    permission = models.CharField(
+        max_length=50, 
+        choices=[('view', 'View'), ('edit', 'Edit')], 
+        default='view'
+    )
+
+    shared_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.note.title} shared with {self.user.username}"
+    
+class Comment(models.Model):
+    note = models.ForeignKey(
+        Note, 
+        on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE
+    )
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.note.title}"

@@ -1,10 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from notes.models import Note
 from .forms import LoginForm
 from django.contrib.auth import login, authenticate
 
 def home(request):
-    return render(request, 'home/home.html')
+    deleted_notes = Note.objects.filter(create_by=request.user, deleted_at__isnull = False)
+    notes = Note.objects.filter(create_by=request.user, deleted_at__isnull = True) 
+    return render(request, 'home/home.html', {'notes': notes})
 
 def login_view(request):
     if request.method == 'GET':
@@ -22,6 +25,5 @@ def login_view(request):
                 login(request, user)
                 return redirect('home')
         
-        # form is not valid or user is not authenticated
         messages.error(request,f'Invalid username or password')
         return render(request,'auth/login.html',{'form': form})

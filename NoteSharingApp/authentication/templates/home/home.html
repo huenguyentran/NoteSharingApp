@@ -15,5 +15,21 @@
     <h2>You are not logged in.</h2>
     <a href="{% url 'login' %}">Login</a>
     {% endif %}
+
+    <h2>My Notes</h2>
+
+    {% if notes %}
+    <ul>
+      {% for note in notes %}
+      <li>
+        <strong>{{ note.title }}</strong><br />
+        {{ note.content }}<br />
+        <small>{{ note.created_at }}</small>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>You have no notes yet.</p>
+    {% endif %}
   </body>
 </html>
