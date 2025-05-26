@@ -48,7 +48,7 @@ class NoteShare(models.Model):
     shared_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.note.title} shared with {self.user.username}"
+        return f"{self.note.title} shared with {self.share_with.username}"
     
 class Comment(models.Model):
     note = models.ForeignKey(

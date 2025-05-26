@@ -5,9 +5,12 @@ from .forms import LoginForm
 from django.contrib.auth import login, authenticate
 
 def home(request):
-    deleted_notes = Note.objects.filter(create_by=request.user, deleted_at__isnull = False)
-    notes = Note.objects.filter(create_by=request.user, deleted_at__isnull = True) 
-    return render(request, 'home/home.html', {'notes': notes})
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        deleted_notes = Note.objects.filter(create_by=request.user, deleted_at__isnull = False)
+        notes = Note.objects.filter(create_by=request.user, deleted_at__isnull = True) 
+        return render(request, 'home/home.html', {'notes': notes})
 
 def login_view(request):
     if request.method == 'GET':
