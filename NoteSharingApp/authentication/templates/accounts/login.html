@@ -1,4 +1,5 @@
 {% load socialaccount %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,6 +19,9 @@
       {% endif %}
       <input type="submit" value="Login" />
     </form>
-    <a href="{% provider_login_url 'google' %}">Login with Google</a>
+    <p>Hoặc đăng nhập bằng:</p>
+    <a href="{% url 'google-login' %}">
+      <button>Đăng nhập bằng Google</button>
+    </a>
   </body>
 </html>
