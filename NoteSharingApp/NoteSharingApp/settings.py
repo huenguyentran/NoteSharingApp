@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
@@ -91,6 +91,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+#Connect to the PostgreSQL database on Render 
+DATABASES['default'] = dj_database_url.parse("postgresql://notesharingapp_user:g3d7AZLLHbZ2yTgnf864AQr32520SPCY@dpg-d0r7on2dbo4c73a3kf7g-a.oregon-postgres.render.com/notesharingapp")
 
 
 # Password validation
