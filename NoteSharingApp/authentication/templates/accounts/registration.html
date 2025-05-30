@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Đăng ký tài khoản</title>
+  </head>
+  <body>
+    <h2>Đăng ký</h2>
+
+    <form method="POST">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Đăng ký</button>
+    </form>
+
+    {{ form.confirm_password.errors }}
+
+    <p>Đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập</a></p>
+  </body>
+</html>

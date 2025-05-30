@@ -23,7 +23,7 @@
       {% for note in notes %}
       <li>
         <strong>{{ note.title }}</strong><br />
-        {{ note.content }}<br />
+        {{ note.content | safe}}<br />
         <small>{{ note.created_at }}</small>
       </li>
       {% endfor %}

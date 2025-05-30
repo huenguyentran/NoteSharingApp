@@ -17,5 +17,11 @@
       {% endif %}
       <input type="submit" value="Login" />
     </form>
+    <a href="{% url 'google-login' %}">
+      <button>Tiếp tục với Google</button>
+    </a>
+    <a href="{% url 'registration' %}">
+      <button>Tạo tài khoản mới</button>
+    </a>
   </body>
 </html>
