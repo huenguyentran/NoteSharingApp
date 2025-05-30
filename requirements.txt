@@ -3,17 +3,21 @@ certifi==2025.4.26
 cffi==1.17.1
 charset-normalizer==3.4.2
 cryptography==45.0.3
+dj-database-url==2.3.0
 Django==5.2.1
 django-allauth==65.8.1
 idna==3.10
 oauthlib==3.2.2
+psycopg2-binary==2.9.10
 pycparser==2.22
 PyJWT==2.10.1
 python-dotenv==1.1.0
 requests==2.32.3
 requests-oauthlib==2.0.0
 sqlparse==0.5.3
+typing_extensions==4.13.2
 tzdata==2025.2
 urllib3==2.4.0
 
-#to install all packages: pip install -r requirements.txt 
+#to install run:
+# pip install -r requirements.txt

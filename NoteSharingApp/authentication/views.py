@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 import requests
 from notes.models import Note
 from .forms import LoginForm, RegistrationForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from urllib.parse import urlencode
 from django.contrib.auth.models import User
 from dotenv import load_dotenv
@@ -97,11 +97,9 @@ def google_callback(request):
             "last_name": ' '.join(name.split()[1:]) if name and len(name.split()) > 1 else ''
         }
     )
-    # Đăng nhập user
     user.backend = 'django.contrib.auth.backends.ModelBackend'
     login(request, user)
 
-    # Chuyển về home
     return redirect('/')
 
 def registration(request):
@@ -115,12 +113,16 @@ def registration(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
+            confirm_password = form.cleaned_data['confirm_password']
             user = User.objects.create_user(username=username, password=password)
 
-            #xử lí các ngoại lệ: password != confirmpass, username đã tồn tại,....
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
             return redirect('/')
         
         messages.error(request, f'Invalid registration details')
         return render(request, 'accounts/registration.html', {'form': form})
+    
+def logout_view(request):
+    logout(request)
+    return redirect('login')
