@@ -1,12 +1,12 @@
 from django.urls import include, path
-from . import views
-
+from .views import LoginView, RegistrationView, HomeView, GoogleCallbackView, GoogleLoginView, LogoutView, AccountView
 urlpatterns = [ 
-  path('', views.home, name='home'),
-  path('login/', views.login_view, name='login'),
-  path('login/google/', views.google_login, name='google-login'),
-  path('login/google/callback/', views.google_callback, name='google_callback'),
-  path('register/', views.registration, name='registration'),
-  path('logout/', views.logout_view, name='logout'),
+  path('', HomeView.as_view(), name='home'),
+  path('login/', LoginView.as_view(), name='login'),
+  path('login/google/', GoogleLoginView.as_view(), name='google-login'),
+  path('login/google/callback/', GoogleCallbackView.as_view(), name='google_callback'),
+  path('register/', RegistrationView.as_view(), name='registration'),
+  path('logout/', LogoutView.as_view(), name='logout'),
+  path('settings/', AccountView.as_view(), name='account_settings'),  
   #chinh sua user, xac minh email, doi mat khau
 ]

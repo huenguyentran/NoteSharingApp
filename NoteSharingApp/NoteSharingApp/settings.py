@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'notes',  
     'authentication',
     'workspaces',
+    'core',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

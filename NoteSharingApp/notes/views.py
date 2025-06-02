@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -43,4 +44,12 @@ def delete_note(request, note_id):
 
     note.deleted_at = timezone.now()
     note.save()
-    return HttpResponse("✅ Note deleted successfully!")
+    return HttpResponse("Note deleted successfully!")
+
+def view_note(request, note_id):
+    try:
+        note = request.user.notes.get(id=note_id, deleted_at__isnull=True)
+    except Note.DoesNotExist:
+        return HttpResponse("Note not found or you do not have permission to view it.", status=404)
+
+    return render(request, 'view_note.html', {'note': note})
