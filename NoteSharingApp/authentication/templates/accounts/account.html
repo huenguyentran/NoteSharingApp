@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Account Settings</title>
+    <style>
+      .hidden {
+        display: none;
+      }
+      .errorlist {
+        color: red;
+      }
+    </style>
+    <script>
+      function toggleChangePassword() {
+        const form = document.getElementById("change-password-form");
+        if (form.classList.contains("hidden")) {
+          form.classList.remove("hidden");
+        } else {
+          form.classList.add("hidden");
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Account Settings</h1>
+
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li style="color: red">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Form cập nhật thông tin user -->
+    <form method="POST" action="{% url 'account_settings' %}">
+      {% csrf_token %}
+      <h2>Thông tin tài khoản</h2>
+      {{ account_form.as_p }}
+      <button type="submit" name="update_account">Lưu thay đổi</button>
+    </form>
+
+    <hr />
+
+    <button onclick="toggleChangePassword()">Change Password</button>
+
+    <!-- Form thay đổi mật khẩu ẩn ban đầu -->
+    <form
+      method="POST"
+      action="{% url 'account_settings' %}"
+      id="change-password-form"
+      class="hidden"
+    >
+      {% csrf_token %}
+      <h2>Thay đổi mật khẩu</h2>
+      {{ password_form.as_p }}
+      <button type="submit" name="change_password">Cập nhật mật khẩu</button>
+    </form>
+  </body>
+</html>

@@ -12,7 +12,7 @@
       <button type="submit">Đăng ký</button>
     </form>
 
-    {{ form.confirm_password.errors }}
+    {{ form.non_field_errors }}
 
     <p>Đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập</a></p>
   </body>
