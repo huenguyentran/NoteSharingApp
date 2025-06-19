@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
+CONNECTION_STRING = os.getenv("CONNECTION_STRING")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
@@ -93,7 +99,7 @@ DATABASES = {
 }
 
 #Connect to the PostgreSQL database on Render 
-DATABASES['default'] = dj_database_url.parse("postgresql://notesharingapp_user:g3d7AZLLHbZ2yTgnf864AQr32520SPCY@dpg-d0r7on2dbo4c73a3kf7g-a.oregon-postgres.render.com/notesharingapp")
+DATABASES['default'] = dj_database_url.parse(CONNECTION_STRING)
 
 
 # Password validation
@@ -137,15 +143,18 @@ USE_DEPRECATED_PYTZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-SOCIALACCOUNT_AUTO_SIGNUP = True
-LOGIN_REDIRECT_URL = '/'
-SITE_ID = 1
+
+
+
+#SOCIALACCOUNT_AUTO_SIGNUP = True
+#LOGIN_REDIRECT_URL = '/'
+#SITE_ID = 1
 
 

@@ -53,6 +53,13 @@ class NoteShare(models.Model):
 class Comment(models.Model):
     note = models.ForeignKey(
         Note, 
+        null=True,
+        on_delete=models.CASCADE
+    )
+
+    parentComment = models.ForeignKey(
+        'self',
+        null=True, 
         on_delete=models.CASCADE
     )
     user = models.ForeignKey(

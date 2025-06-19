@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from notes.models import Note 
-from core.views import BaseView
+from .BaseView import BaseView
 
 class HomeView(BaseView, View):
     def get(self, request):

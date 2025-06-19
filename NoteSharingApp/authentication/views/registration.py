@@ -11,12 +11,7 @@ class RegistrationView(FormView):
     success_url = '/'
     def form_valid(self, form):
       username = form.cleaned_data['username']
-      password = form.cleaned_data['password']
-
-      if User.objects.filter(username=username).exists():
-        messages.error(self.request, 'Tên đăng nhập đã tồn tại, vui lòng chọn tên khác.')
-        return super().form_invalid(form)
-      
+      password = form.cleaned_data['password']      
 
       user = User.objects.create_user(username=username, password=password)
       user.backend = 'django.contrib.auth.backends.ModelBackend'
@@ -29,3 +24,5 @@ class RegistrationView(FormView):
               messages.error(self.request, f"{field}: {error}")
 
       return super().form_invalid(form)
+    
+    

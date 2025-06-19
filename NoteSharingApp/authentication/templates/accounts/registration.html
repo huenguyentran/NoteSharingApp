@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,8 +13,11 @@
       <button type="submit">Đăng ký</button>
     </form>
 
-    {{ form.non_field_errors }}
+    <div class="invalid-username-feedback"></div>
+    <div class="invalid-password-feedback"></div>
 
     <p>Đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập</a></p>
+
+    <script src="{% static 'authentication/js/registration.js' %}"></script>
   </body>
 </html>

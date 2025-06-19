@@ -1,0 +1,79 @@
+<!-- templates/share_note.html -->
+ {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chia sẻ ghi chú</title>
+  </head>
+  <script src="{% static 'notes/js/user.js' %}"></script>
+  <body>
+    <h1>Chia sẻ ghi chú</h1>
+
+    {% if error %}
+    <p style="color: red">{{ error }}</p>
+    {% endif %} {% if success %}
+    <p style="color: green">
+      Ghi chú đã được chia sẻ với {{ shared_with }} với quyền {{ permission }}.
+    </p>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %} 
+      <label for="search-user">Tìm người dùng:</label>
+      <input type="text" id="search-user" placeholder="Nhập tên hoặc email..." oninput="searchUsers()" />
+      <div id="user-list">
+        {% for user in users %}
+        <label class="user-item" data-name="{{ user.username|lower }} {{ user.email|lower }}">
+          <input type="checkbox" name="share_with_ids" value="{{ user.id }}" />
+          {{ user.username }} ({{ user.email }})
+        </label><br />
+        {% endfor %}
+      </div>
+      <div id="selected-users" style="margin-top: 10px;">
+      <strong>Đã chọn:</strong>
+      <ul id="selected-user-list"></ul>
+    </div>
+      
+        
+      <label for="permission">Quyền:</label>
+      <select name="permission" required>
+        <option value="view">Chỉ xem</option>
+        <option value="edit">Chỉnh sửa</option>
+      </select>
+      <br /><br />
+      
+      <button type="submit">Chia sẻ</button>
+    </form>
+      
+      <hr />
+<h2>Đã chia sẻ với:</h2>
+{% if shared_users %}
+<form method="post">
+  {% csrf_token %}
+  {% for share in shared_users %}
+  <div style="margin-bottom: 10px;">
+    <strong>{{ share.share_with.username }}</strong>
+
+    <!-- Chọn quyền -->
+    <select name="update_permission_{{ share.id }}">
+      <option value="view" {% if share.permission == "view" %}selected{% endif %}>Chỉ xem</option>
+      <option value="edit" {% if share.permission == "edit" %}selected{% endif %}>Chỉnh sửa</option>
+    </select>
+
+    <!-- Nút xoá chia sẻ -->
+    <button type="submit" name="delete_share_id" value="{{ share.id }}" onclick="return confirm('Xoá chia sẻ với {{ share.share_with.username }}?')">
+      Xóa
+    </button>
+  </div>
+  {% endfor %}
+
+  <!-- Nút cập nhật quyền -->
+  <button type="submit" name="update_permissions" value="1">Cập nhật quyền</button>
+</form>
+{% else %}
+<p>Chưa chia sẻ với ai.</p>
+{% endif %}
+
+  </body>
+</html>
