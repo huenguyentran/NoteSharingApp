@@ -6,3 +6,5 @@ from .usernameValidation import UsernameValidationView
 from .passwordValidation import PasswordValidationView
 from .combinedAuth import CombinedAuthView
 from .createAccValidation import CreateAccountValidation
+from .login import LoginView
+from .registration import RegisterView

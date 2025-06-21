@@ -32,10 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
     box.innerHTML = ""; // xóa thông báo cũ
     box.appendChild(li);
 
-    // Tự động ẩn sau 5 giây
     setTimeout(() => {
         box.innerHTML = "";
-    }, 3000);
+    }, 2000);
   }
 
   if (password && passwordFeedbackArea) {
@@ -112,9 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(data => {
         if (data.validation_error) {
           showMessage("error", data.validation_error);
-          console.log("Registration data is valid1111111");
         } else  {
-          console.log("Registration data is valid");
           showMessage("success", "Đăng ký thành công!");
           registration_form.submit(); 
         }
