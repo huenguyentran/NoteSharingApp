@@ -1,1 +1,1 @@
-from .home import HomeView
+from .dashboard import DashBoardView

@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import HomeView
-
+from .views import DashBoardView
+from .views.ErrorView import ErrorView
 urlpatterns = [ 
-  path('', HomeView.as_view(), name='home'),
-  path('error/', HomeView.as_view(), name='error_view'),
+  path('', DashBoardView.as_view(), name='dashboard'),
+  path('error/', ErrorView, name='error_view'),
 ]

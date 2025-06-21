@@ -2,13 +2,13 @@ from django import forms
 from django.contrib.auth.models import User
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=65)
-    password = forms.CharField(max_length=65, widget=forms.PasswordInput)
+    login_username = forms.CharField(max_length=65)
+    login_password = forms.CharField(max_length=65, widget=forms.PasswordInput)
 
 class RegistrationForm(forms.Form):
-    username = forms.CharField(max_length=65) 
-    password = forms.CharField(max_length=65, widget=forms.PasswordInput)
-    confirm_password = forms.CharField(max_length=65, widget=forms.PasswordInput)   
+    res_username = forms.CharField(max_length=65) 
+    res_password = forms.CharField(max_length=65, widget=forms.PasswordInput)
+    res_confirm_password = forms.CharField(max_length=65, widget=forms.PasswordInput)   
 
     def clean_username(self):
         username = self.cleaned_data.get('username')

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Home</title>
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>Email: {{ user.email }}</p>
+    <p>First Name: {{ user.first_name }}</p>
+    <p>Last Name: {{ user.last_name }}</p>
+    <a href="{% url 'logout' %}">Logout</a>
+    {% endif %}
+
+    <h2>My Notes</h2>
+
+    {% if notes %}
+    <ul>
+      {% for note in notes %}
+      <li>
+        <strong>{{ note.title }}</strong>
+        <br />
+        {{ note.content | safe}}
+        <br />
+        {{ note.create_by }}
+        <br />
+        {{ note.updated_at }} <br />
+        {{note.created_at }}
+        <br />
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>You have no notes yet.</p>
+    {% endif %}
+  </body>
+</html>

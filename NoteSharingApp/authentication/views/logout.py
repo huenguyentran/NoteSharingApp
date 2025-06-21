@@ -4,4 +4,5 @@ from django.views import View
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('login')
+        request.session.flush()
+        return redirect('auth_combined')
