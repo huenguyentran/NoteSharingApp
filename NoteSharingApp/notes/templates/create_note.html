@@ -1,17 +1,25 @@
-<!-- templates/notes/create_note.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Create Note</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create New Note - My Notes App</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
     <script
       src="https://cdn.tiny.cloud/1/xfe1ajckr5bngkcosxjwq0flmm0xzo9aufq6ffi6okktajdj/tinymce/7/tinymce.min.js"
       referrerpolicy="origin"
     ></script>
     <script>
       tinymce.init({
-        selector: "textarea",
+        selector: '#id_content', 
         plugins: [
-          // Core editing features
           "anchor",
           "autolink",
           "charmap",
@@ -25,55 +33,256 @@
           "table",
           "visualblocks",
           "wordcount",
-          // Your account includes a free trial of TinyMCE premium features
-          // Try the most popular premium features until Jun 9, 2025:
-          "checklist",
-          "mediaembed",
-          "casechange",
-          "formatpainter",
-          "pageembed",
-          "a11ychecker",
-          "tinymcespellchecker",
-          "permanentpen",
-          "powerpaste",
-          "advtable",
-          "advcode",
-          "editimage",
-          "advtemplate",
-          "ai",
-          "mentions",
-          "tinycomments",
-          "tableofcontents",
-          "footnotes",
-          "mergetags",
-          "autocorrect",
-          "typography",
-          "inlinecss",
-          "markdown",
-          "importword",
-          "exportword",
-          "exportpdf",
         ],
         toolbar:
-          "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-        tinycomments_mode: "embedded",
-        tinycomments_author: "Author name",
-        mergetags_list: [
-          { value: "First.Name", title: "First Name" },
-          { value: "Email", title: "Email" },
-        ],
-        ai_request: (request, respondWith) =>
-          respondWith.string(() =>
-            Promise.reject("See docs to implement AI Assistant")
-          ),
+          "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
       });
     </script>
+    <style>
+      :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #50e3c2;
+        --background-color: #f4f7f6;
+        --card-background: #ffffff;
+        --text-color: #333333;
+        --light-text-color: #666666;
+        --border-color: #e0e0e0;
+        --shadow-color: rgba(0, 0, 0, 0.08);
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        align-items: center; 
+        justify-content: center; 
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 800px; 
+        width: 90%; 
+        margin: 40px auto; 
+        padding: 30px;
+        background-color: var(--card-background);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px var(--shadow-color);
+        box-sizing: border-box;
+      }
+
+      h1 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2em;
+        font-weight: 600;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text-color);
+      }
+
+      input[type="text"],
+      textarea {
+        width: calc(100% - 20px); 
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1em;
+        box-sizing: border-box; 
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      input[type="text"]:focus,
+      textarea:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2); 
+        outline: none;
+      }
+
+      textarea {
+        min-height: 300px; 
+        resize: vertical;
+      }
+
+      form p {
+          margin-bottom: 20px; 
+      }
+
+      form p label {
+          display: block;
+          margin-bottom: 8px;
+          font-weight: 600;
+          color: var(--text-color);
+      }
+
+      form p input[type="text"],
+      form p textarea {
+          width: 100%; 
+          padding: 10px;
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
+          font-family: 'Poppins', sans-serif;
+          font-size: 1em;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      form ul.errorlist {
+          list-style: none;
+          padding: 0;
+          color: #e74c3c; 
+          font-size: 0.9em;
+          margin-top: 5px;
+          margin-bottom: 10px;
+      }
+      form ul.errorlist li {
+          margin-bottom: 3px;
+      }
+
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        text-decoration: none; 
+        text-align: center;
+      }
+
+      .button-primary {
+        background-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+      }
+
+      .button-primary:hover {
+        background-color: #3a7bd5;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+      }
+
+      .button-secondary {
+        background-color: #e0e0e0;
+        color: var(--text-color);
+      }
+
+      .button-secondary:hover {
+        background-color: #d0d0d0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .tox .tox-editor-container {
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        overflow: hidden; 
+      }
+
+      .tox .tox-menubar,
+      .tox .tox-toolbar-overlord,
+      .tox .tox-statusbar {
+        background-color: var(--background-color) !important;
+        border-color: var(--border-color) !important;
+      }
+
+      .tox .tox-menubar {
+        border-bottom: 1px solid var(--border-color) !important;
+      }
+      .tox .tox-toolbar__group {
+        border-right: 1px solid var(--border-color) !important;
+      }
+      .tox .tox-tbtn {
+        color: var(--text-color) !important;
+      }
+      .tox .tox-tbtn:hover {
+        background-color: rgba(74, 144, 226, 0.1) !important;
+      }
+      .tox .tox-tbtn--enabled, .tox .tox-tbtn--active {
+        background-color: rgba(74, 144, 226, 0.2) !important;
+      }
+      .tox .tox-statusbar__text-container {
+        color: var(--light-text-color) !important;
+      }
+      .tox .tox-collection__item--active {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+      }
+      .tox .tox-collection__item--active:hover {
+        background-color: #3a7bd5 !important;
+      }
+      .tox .tox-insert-menu-item__text,
+      .tox .tox-collection__item-label {
+        color: var(--text-color);
+      }
+      .tox .tox-menu .tox-collection__item--active .tox-insert-menu-item__text,
+      .tox .tox-menu .tox-collection__item--active .tox-collection__item-label {
+        color: white;
+      }
+      .tox .tox-pop .tox-pop__dialog {
+        box-shadow: 0 5px 15px var(--shadow-color);
+      }
+
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 20px auto;
+          padding: 20px;
+        }
+        h1 {
+          font-size: 1.6em;
+          margin-bottom: 20px;
+        }
+        .form-actions {
+          flex-direction: column;
+          gap: 10px;
+        }
+        .button {
+          width: 100%;
+        }
+        textarea {
+            min-height: 200px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Create New Note</h1>
-    <form method="post" novalidate>
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit">Save</button>
-    </form>
+    <div class="container">
+      <h1>Create New Note</h1>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="form-actions">
+          <button type="submit" class="button button-primary">Save Note</button>
+          <a href="{% url 'home' %}" class="button button-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
   </body>
 </html>
