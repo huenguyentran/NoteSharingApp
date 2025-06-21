@@ -49,9 +49,13 @@ class ChangePasswordForm(forms.Form):
         
         return cleaned_data
     
-class AccountSettingsForm(forms.Form):
-    username = forms.CharField(max_length=65, required=False)
-    email = forms.EmailField(required=False)
-    first_name = forms.CharField(max_length=30, required=False)
-    last_name = forms.CharField(max_length=30, required=False)
-
+class AccountSettingsForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+        }

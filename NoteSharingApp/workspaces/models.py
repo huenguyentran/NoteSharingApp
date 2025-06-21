@@ -1,25 +1,34 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
+def workspace_uploadThumb_path(instance, filename):
+    return f'workspace_files/{instance.id}/{filename}_{timezone.now().strftime("%Y%m%d%H%M%S")}'
 
 class Workspace(models.Model):
     name = models.CharField(max_length=200)  
+
+    thumbnail = models.ImageField(upload_to=workspace_uploadThumb_path, blank=True, null=True)   
     description = models.TextField()          
     created_at = models.DateTimeField(auto_now_add=True)  
     updated_at = models.DateTimeField(auto_now=True)      
-
     def __str__(self):
         return self.name
+
+
     
 class WorkspaceMember(models.Model):
+    unique_together = ('workspace', 'user')
     workspace = models.ForeignKey(
         Workspace, 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='members'
     )
 
     user = models.ForeignKey(
         'auth.User', 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='workspace_memberships'
     )
 
     isAdmin = models.BooleanField(default=False)

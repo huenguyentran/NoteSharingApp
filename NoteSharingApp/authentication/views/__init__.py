@@ -1,11 +1,13 @@
-
+from .login import LoginView
+from .registration import RegistrationView
+#chuyen home sang core
 from .home import HomeView
-
 from .googleCallBack import GoogleCallbackView
 from .googlLogin import GoogleLoginView
 from .logout import LogoutView
 from .account import AccountView
-
+from .usernameValidation import UsernameValidationView
+from .passwordValidation import PasswordValidationView
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm

@@ -1,11 +1,11 @@
-from core.views import BaseView
+from core.views.BaseView import BaseView
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.views.generic.edit import View
 from ..forms import AccountSettingsForm, ChangePasswordForm
 from django.contrib.auth import update_session_auth_hash
 
-class AccountView(BaseView, View):
+class AccountView(BaseView):
     template_name = 'accounts/account.html'
     def get(self, request):
       account_form = AccountSettingsForm(initial={

@@ -22,9 +22,15 @@
     <ul>
       {% for note in notes %}
       <li>
-        <strong>{{ note.title }}</strong><br />
-        {{ note.content | safe}}<br />
-        <small>{{ note.created_at }}</small>
+        <strong>{{ note.title }}</strong>
+        <br />
+        {{ note.content | safe}}
+        <br />
+        {{ note.create_by }}
+        <br />
+        {{ note.updated_at }} <br />
+        {{note.created_at }}
+        <br />
       </li>
       {% endfor %}
     </ul>

@@ -1,17 +1,17 @@
 from django.urls import path
 
-from . import views
+from .views import createNoteView, editNoteView, viewNoteView, shareNoteView, deleteNoteView
 
 urlpatterns = [
-    #path("", views.index_note, name="index"),
+    #note URLs
 
-    #path('create/', views.create_note, name='create_note'),
+    path('create/', createNoteView.as_view(), name='create_note'),
 
-    #path("<int:note_id>/", views.view_note, name="view_note"),
+    path("<int:note_id>/", viewNoteView.as_view(), name="view_note"),
 
-    #path("edit/<int:note_id>/", views.edit_note, name="edit_note"),
+    path("edit/<int:note_id>/", editNoteView.as_view(), name="edit_note"),
 
-    #path("sharing/<int:note_id>/", views.share_note, name="share_note"),
+    path("delete/<int:note_id>/", deleteNoteView.as_view(), name="delete_note"),
 
-    #path("delete/<int:note_id>/", views.delete_note, name="delete_note"),
+    path("sharing/<int:note_id>/", shareNoteView.as_view(), name="share_note"),
 ]
