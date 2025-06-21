@@ -18,7 +18,7 @@
     ></script>
     <script>
       tinymce.init({
-        selector: '#id_content',
+        selector: "#id_content",
         plugins: [
           "anchor",
           "autolink",
@@ -51,7 +51,7 @@
       }
 
       body {
-        font-family: 'Poppins', sans-serif;
+        font-family: "Poppins", sans-serif;
         margin: 0;
         padding: 0;
         background-color: var(--background-color);
@@ -101,7 +101,7 @@
         padding: 10px;
         border: 1px solid var(--border-color);
         border-radius: 8px;
-        font-family: 'Poppins', sans-serif;
+        font-family: "Poppins", sans-serif;
         font-size: 1em;
         box-sizing: border-box;
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -120,38 +120,38 @@
       }
 
       form p {
-          margin-bottom: 20px;
+        margin-bottom: 20px;
       }
 
       form p label {
-          display: block;
-          margin-bottom: 8px;
-          font-weight: 600;
-          color: var(--text-color);
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text-color);
       }
 
       form p input[type="text"],
       form p textarea {
-          width: 100%;
-          padding: 10px;
-          border: 1px solid var(--border-color);
-          border-radius: 8px;
-          font-family: 'Poppins', sans-serif;
-          font-size: 1em;
-          box-sizing: border-box;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-size: 1em;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
       }
 
       form ul.errorlist {
-          list-style: none;
-          padding: 0;
-          color: #e74c3c;
-          font-size: 0.9em;
-          margin-top: 5px;
-          margin-bottom: 10px;
+        list-style: none;
+        padding: 0;
+        color: #e74c3c;
+        font-size: 0.9em;
+        margin-top: 5px;
+        margin-bottom: 10px;
       }
       form ul.errorlist li {
-          margin-bottom: 3px;
+        margin-bottom: 3px;
       }
 
       .form-actions {
@@ -169,7 +169,8 @@
         font-weight: 600;
         font-size: 1em;
         cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.2s ease,
+          box-shadow 0.3s ease;
         text-decoration: none;
         text-align: center;
       }
@@ -222,7 +223,8 @@
       .tox .tox-tbtn:hover {
         background-color: rgba(74, 144, 226, 0.1) !important;
       }
-      .tox .tox-tbtn--enabled, .tox .tox-tbtn--active {
+      .tox .tox-tbtn--enabled,
+      .tox .tox-tbtn--active {
         background-color: rgba(74, 144, 226, 0.2) !important;
       }
       .tox .tox-statusbar__text-container {
@@ -247,7 +249,6 @@
         box-shadow: 0 5px 15px var(--shadow-color);
       }
 
-
       @media (max-width: 768px) {
         .container {
           margin: 20px auto;
@@ -265,7 +266,7 @@
           width: 100%;
         }
         textarea {
-            min-height: 200px;
+          min-height: 200px;
         }
       }
     </style>
@@ -274,12 +275,15 @@
     <div class="container">
       <h1>Edit Note</h1>
       <form method="post" novalidate>
-        {% csrf_token %}
-        {{ form.as_p }}
+        {% csrf_token %} {{ form.as_p }}
 
         <div class="form-actions">
-          <button type="submit" class="button button-primary">Save Changes</button>
-          <a href="{% url 'home' %}" class="button button-secondary">Cancel</a>
+          <button type="submit" class="button button-primary">
+            Save Changes
+          </button>
+          <a href="{% url 'dashboard' %}" class="button button-secondary"
+            >Cancel</a
+          >
         </div>
       </form>
     </div>
