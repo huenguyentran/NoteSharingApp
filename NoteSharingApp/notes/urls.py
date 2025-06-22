@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import createNoteView, editNoteView, viewNoteView, shareNoteView, deleteNoteView
+from .views import createNoteView, editNoteView, viewNoteView, shareNoteView, deleteNoteView, ByLinkNoteView
 
 urlpatterns = [
     #note URLs
@@ -14,4 +14,7 @@ urlpatterns = [
     path("delete/<int:note_id>/", deleteNoteView.as_view(), name="delete_note"),
 
     path("sharing/<int:note_id>/", shareNoteView.as_view(), name="share_note"),
+
+    path('note/by-link/<uuid:note_id>/', ByLinkNoteView.as_view(), name='note_by_link')
+
 ]

@@ -3,3 +3,4 @@ from .editNote import editNoteView
 from .viewNote import viewNoteView
 from .shareNote import shareNoteView
 from .deleteNote import deleteNoteView
+from .viewNoteByLink import ByLinkNoteView
