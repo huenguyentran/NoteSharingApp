@@ -4,3 +4,5 @@ from .viewNote import viewNoteView
 from .shareNote import shareNoteView
 from .deleteNote import deleteNoteView
 from .viewNoteByLink import ByLinkNoteView
+from .NoteList import NoteListView
+from .NoteMain import NoteMainView

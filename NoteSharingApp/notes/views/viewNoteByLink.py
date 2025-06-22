@@ -1,6 +1,6 @@
 from django.views import View
 from django.http import JsonResponse, Http404, HttpResponseForbidden
-from NoteSharingApp.notes.models import Note  
+from notes.models import Note  
 from .BaseNoteAccess import BaseNoteAccessView
 
 

@@ -36,22 +36,8 @@
 <div class="container">
   <h1>Welcome to My Notes!</h1>
   <h2>My Notes</h2>
-  <ul class="note-list">
-    {% if notes %} {% for note in notes %}
-    <li class="note-item">
-      <strong>{{ note.title }}</strong>
-      <div class="note-content">{{ note.content }}</div>
-      <div class="note-meta">
-        <span>Created by: {{ note.created_by.username }}</span>
-        <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
-        <span>Last updated: {{ note.updated_at|date:"F j, Y H:i" }}</span>
-      </div>
-    </li>
-    {% endfor %} {% else %}
-    <li class="no-notes">
-      <p>You don't have any notes yet. Start by adding a new one!</p>
-    </li>
-    {% endif %}
+  <ul id="note-list" class="note-list">
+    <!-- Notes sẽ được thêm bằng JS -->
   </ul>
 </div>
 
@@ -60,5 +46,5 @@
 {% endblock %}
 
 {% block script %}
-<script src="{% static 'core/js/dashboardScript.js' %}"></script>
+<script src="{% static 'notes/js/notemain.js' %}"></script>
 {% endblock %}

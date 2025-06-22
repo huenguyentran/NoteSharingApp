@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'authentication',
     'workspaces',
     'core',
+    'comments',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
