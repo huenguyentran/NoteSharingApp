@@ -1,7 +1,7 @@
 from NoteSharingApp.core.views import BaseView
 from django.http import JsonResponse
-from NoteSharingApp.notes.models import Note
-from NoteSharingApp.notes.models import NoteShare
+from notes.models import Note
+from notes.models import NoteShare
 from django.db.models import Q
 from django.core.paginator import Paginator
 

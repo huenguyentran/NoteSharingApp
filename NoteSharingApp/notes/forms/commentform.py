@@ -1,5 +1,5 @@
 from django import forms
-from NoteSharingApp.notes.models import Comment 
+from notes.models import Comment 
 
 class CommentForm(forms.ModelForm):
     class Meta:

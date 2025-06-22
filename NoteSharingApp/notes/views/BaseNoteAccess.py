@@ -1,6 +1,6 @@
 from django.http import Http404, HttpResponseForbidden
 from django.views import View
-from NoteSharingApp.notes.models import Note
+from notes.models import Note
 
 # Quyền truy cập: view, edit, owner
 # Lớp cha -> các view khác sẽ kế thừa từ lớp này
