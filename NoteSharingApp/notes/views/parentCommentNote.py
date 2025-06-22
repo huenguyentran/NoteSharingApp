@@ -2,8 +2,8 @@ from datetime import timezone
 from django.shortcuts import get_object_or_404
 from NoteSharingApp.core.views import BaseView
 from django.http import JsonResponse
-from NoteSharingApp.notes.models import Comment
-from NoteSharingApp.notes.models import Note
+from notes.models import Comment
+from notes.models import Note
 import json
 
 
