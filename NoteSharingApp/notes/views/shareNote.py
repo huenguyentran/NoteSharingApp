@@ -1,15 +1,16 @@
 from django.views import View
+from core.views.BaseView import BaseView
+from notes.views.BaseNoteAccess import BaseNoteAccessView
 from core.views.ErrorView import ErrorView
 from notes.models import NoteShare, Note
-from core.views.BaseView import BaseView
-
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
 class shareNoteView(BaseView):
     template_name = 'share_note.html'
+
+
     def get(self, request, note_id):
         note = get_object_or_404(Note, id=note_id)
 
@@ -21,7 +22,7 @@ class shareNoteView(BaseView):
         users = User.objects.exclude(id=request.user.id)
         shared_users = NoteShare.objects.filter(note=note)
 
-        # Trong cả GET và POST:
+        
         return render(request, self.template_name, {
             'note': note,
             'users': User.objects.exclude(id=request.user.id),

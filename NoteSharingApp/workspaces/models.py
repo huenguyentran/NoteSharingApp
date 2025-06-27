@@ -9,16 +9,21 @@ class Workspace(models.Model):
     name = models.CharField(max_length=200)  
 
     thumbnail = models.ImageField(upload_to=workspace_uploadThumb_path, blank=True, null=True)   
-    description = models.TextField()          
-    created_at = models.DateTimeField(auto_now_add=True)  
-    updated_at = models.DateTimeField(auto_now=True)      
+    description = models.TextField()       
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
     def __str__(self):
         return self.name
 
 
     
 class WorkspaceMember(models.Model):
-    unique_together = ('workspace', 'user')
+    class Meta:
+        unique_together = ('workspace', 'user')
+
     workspace = models.ForeignKey(
         Workspace, 
         on_delete=models.CASCADE,
@@ -33,14 +38,12 @@ class WorkspaceMember(models.Model):
 
     isAdmin = models.BooleanField(default=False)
     joined_at = models.DateTimeField(auto_now_add=True)
-    permission = models.CharField(
-        max_length=50, 
-        choices=[('view', 'View'), ('edit', 'Edit')], 
-        default='view'
-    )
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.user.username + " in " + self.workspace.name    
+    
 
 class WorkspaceFile(models.Model):
     workspace = models.ForeignKey(

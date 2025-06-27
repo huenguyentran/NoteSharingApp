@@ -7,8 +7,6 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-
-
 class LoginView(View):
   def get(self, request):
     return redirect('auth_combined')

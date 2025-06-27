@@ -12,6 +12,7 @@ class NoteListView(BaseView):
   #Lấy danh sach note 
   #/notes/?permission=edit
   #/notes/?created_by_me=true&search=plan&page=2
+  #/notes/?create_by_me=true
   def get(self, request):
     user = request.user
     page = request.GET.get("page", 1)

@@ -1,5 +1,7 @@
+from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse, Http404, HttpResponseForbidden
+from core.views.ErrorView import ErrorView
 from notes.models import Note  
 from .BaseNoteAccess import BaseNoteAccessView
 
@@ -8,21 +10,22 @@ from .BaseNoteAccess import BaseNoteAccessView
 # Token được truyền qua query parameter: ?token=abc123
 
 
-class ByLinkNoteView(BaseNoteAccessView):
-    permission_required = 'view'
-    require_login = False
-    #Cho phép truy cập ko yêu cầu login, yêu cầu token
+class ByLinkNoteView(View):
+    def get(self, request, note_id):
+        token = request.GET.get('token')
+        if not token:
+            return HttpResponseForbidden("Missing token")
 
-    def get_note(self, **kwargs):
-        note_id = kwargs.get('note_id')
-        return Note.objects.get(id=note_id)
+        try:
+            note = Note.objects.get(id=note_id, is_shared_via_link=True)
+        except Note.DoesNotExist:
+            return ErrorView(request, message = "Không tìm thấy note hoặc Note không được chia sẻ bằng link")
+        
+        if str(note.share_token) != str(token):
+            return HttpResponseForbidden("Invalid token")
 
-    def get(self, request, *args, **kwargs):
-        note = self.note  # Đã được gán bởi dispatch
-        data = {
-            'id': str(note.id),
-            'title': note.title,
-            'content': note.content,
-            'permission': self.permission
-        }
-        return JsonResponse(data)
+        return render(request, "note_by_link.html", {
+            "note": note,
+        })
+    
+    

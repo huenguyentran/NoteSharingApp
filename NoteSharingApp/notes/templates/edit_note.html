@@ -16,28 +16,10 @@
       src="https://cdn.tiny.cloud/1/xfe1ajckr5bngkcosxjwq0flmm0xzo9aufq6ffi6okktajdj/tinymce/7/tinymce.min.js"
       referrer-policy="origin"
     ></script>
-    <script>
-      tinymce.init({
-        selector: "#id_content",
-        plugins: [
-          "anchor",
-          "autolink",
-          "charmap",
-          "codesample",
-          "emoticons",
-          "image",
-          "link",
-          "lists",
-          "media",
-          "searchreplace",
-          "table",
-          "visualblocks",
-          "wordcount",
-        ],
-        toolbar:
-          "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
-      });
-    </script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
       :root {
         --primary-color: #4a90e2;
@@ -276,6 +258,49 @@
       <h1>Edit Note</h1>
       <form method="post" novalidate>
         {% csrf_token %} {{ form.as_p }}
+
+        {% if share_link %}
+          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#shareLinkModal">
+            Lấy link chia sẻ
+          </button>
+
+          <!-- Modal để hiện link chia sẻ -->
+          <div class="modal fade" id="shareLinkModal" tabindex="-1" aria-labelledby="shareLinkModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+
+                <div class="modal-header">
+                  <h5 class="modal-title" id="shareLinkModalLabel">Link chia sẻ</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="input-group">
+                    <input id="shareLinkInput" type="text" class="form-control" value="{{ share_link }}" readonly>
+
+                    <button class="btn btn-outline-secondary" type="button" onclick="copyShareLink()">Copy</button>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <script>
+            function copyShareLink() {
+              const input = document.getElementById('shareLinkInput');
+              input.select();
+              input.setSelectionRange(0, 99999);
+              navigator.clipboard.writeText(input.value)
+                .then(() => alert("Đã copy link chia sẻ!"))
+                .catch(() => alert("Không thể copy link"));
+            }
+          </script>
+        {% endif %}
 
         <div class="form-actions">
           <button type="submit" class="button button-primary">

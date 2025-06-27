@@ -1,0 +1,25 @@
+{% extends "base/base.html" %} 
+{%load static%} 
+
+{% block title %}Ghi chú{%endblock %} 
+
+{% block head %}
+<!-- CSS, fonts, v.v. -->
+<link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+  rel="stylesheet"
+/>
+{% endblock %}
+
+
+{% block content %}
+<h2>Danh sách Workspace</h2>
+<div id="workspace-container" data-url="{% url 'workspace_list' %}">
+  <p>Đang tải danh sách workspace...</p>
+</div>
+{% endblock %} 
+
+{% block script %}
+<script src="{% static 'workspaces/js/main.js' %}"></script>
+{% endblock %} 

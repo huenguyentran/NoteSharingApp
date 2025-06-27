@@ -4,10 +4,11 @@ from notes.models import Note
 
 # Quyền truy cập: view, edit, owner
 # Lớp cha -> các view khác sẽ kế thừa từ lớp này
+# Các lớp con kế thừa lớp này: ShareNote, EditNote, DeleteNote, GetNote
 
 
 class BaseNoteAccessView(View):
-    permission_required = None  # 'view', 'edit', 'owner'
+    permission_required = None  # Quyền truy cập yêu cầu để thực hiện thao tác: owner, view, edit
     require_login = True        # nếu False thì cho phép truy cập không đăng nhập (share link)
 
     def get_note(self, **kwargs):
@@ -16,7 +17,17 @@ class BaseNoteAccessView(View):
     def get_permission(self, note, user, token=None):
         return note.get_permission(user=user, token=token)
 
+    #kiểm tra quyền truy cập ghi chú của user với note
     def has_permission(self, note, user, token=None):
+        if note.workspace:
+            # Ghi chú thuộc workspace → lấy quyền từ workspace
+            member = note.workspace.members.filter(user=user).first()
+            if not member:
+                return None
+            if member.isAdmin:
+                return 'owner'
+            return member.permission
+
         perm = self.get_permission(note, user, token)
         if self.permission_required == 'owner':
             return perm == 'owner'
@@ -27,7 +38,7 @@ class BaseNoteAccessView(View):
         return False
 
 
-    #chặn request từ trước nếu người dùng ko có quyền với note 
+    #Override lại để kiểm tra người dùng có quyền với Note không
     def dispatch(self, request, *args, **kwargs):
         user = request.user if request.user.is_authenticated else None
         token = kwargs.get("token")

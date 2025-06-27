@@ -6,3 +6,4 @@ from .deleteNote import deleteNoteView
 from .viewNoteByLink import ByLinkNoteView
 from .NoteList import NoteListView
 from .NoteMain import NoteMainView
+from .viewNoteByLink import ByLinkNoteView

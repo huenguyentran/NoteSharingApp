@@ -1,0 +1,9 @@
+<!-- Card cho mỗi workspace trong danh sách workspace -->
+
+<ul id="workspace-list">
+  {% for w in workspaces %}
+    <li><strong>{{ w.name }}</strong> - {{ w.description|truncatewords:20 }}</li>
+  {% empty %}
+    <li>Không có workspace nào.</li>
+  {% endfor %}
+</ul>

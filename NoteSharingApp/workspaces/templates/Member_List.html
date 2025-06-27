@@ -1,0 +1,10 @@
+<!-- tên người dùng, chỉnh sửa quyền, xóa khỏi workspace(nếu curent user là admin) -->
+
+<h2>Thành viên trong workspace</h2>
+<ul>
+  {% for user in members %}
+    <li>{{ user.first_name }} ({{ user.first_name }}) ({{ user.email }})</li>
+  {% empty %}
+    <li>Không có thành viên nào trong workspace này.</li>
+  {% endfor %}
+</ul>

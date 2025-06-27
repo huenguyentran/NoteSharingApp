@@ -19,11 +19,10 @@ urlpatterns = [
 
     path("edit/<int:note_id>/", editNoteView.as_view(), name="edit_note"),
 
-
     path("delete/<int:note_id>/", deleteNoteView.as_view(), name="delete_note"),
 
     path("sharing/<int:note_id>/", shareNoteView.as_view(), name="share_note"),
 
-    path('note/by-link/<uuid:note_id>/', ByLinkNoteView.as_view(), name='note_by_link')
+    path('by-link/<int:note_id>/', ByLinkNoteView.as_view(), name='note_by_link')
 
 ]

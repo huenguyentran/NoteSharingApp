@@ -3,6 +3,11 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from workspaces.models import Workspace as workspace
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
+HOST_URL = os.getenv("LOCALHOST_URL")
 
 class Note(models.Model):
     title = models.CharField(max_length=200)  
@@ -17,6 +22,7 @@ class Note(models.Model):
         workspace,
         on_delete=models.CASCADE,
         null=True,
+        blank=True
     )
 
     is_shared_via_link = models.BooleanField(default=False)
@@ -58,7 +64,7 @@ class Note(models.Model):
         return self.get_share_link()
 
     def get_share_link(self):
-        return f'/note/by-link/{self.id}/?token={self.share_token}'
+        return f'{HOST_URL}/notes/by-link/{self.id}/?token={self.share_token}'
     
 
     

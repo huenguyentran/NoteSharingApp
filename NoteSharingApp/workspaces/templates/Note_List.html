@@ -1,0 +1,8 @@
+<h2>Ghi chú trong workspace</h2>
+<ul>
+  {% for note in notes %}
+    <li><strong>{{ note.title }}</strong></li>
+  {% empty %}
+    <li>Không có ghi chú nào.</li>
+  {% endfor %}
+</ul>

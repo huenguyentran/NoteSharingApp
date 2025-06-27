@@ -7,6 +7,7 @@ from comments.models import Comment
 from notes.models import Note
 
 class CommentView(View):
+    #Tạo comment
     def post(self, request):
         """
         Yêu cầu JSON: { "note_id": <id>, "content": <text> }
@@ -39,6 +40,7 @@ class CommentView(View):
             "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M")
         })
 
+    #Sửa comment (có thể ko sd)
     def put(self, request, comment_id):
         """
         Yêu cầu JSON: { "content": <text> }
@@ -69,6 +71,7 @@ class CommentView(View):
             "content": comment.content
         })
 
+    #Xóa comment -> owner + admin
     def delete(self, request, comment_id):
         """
         Xoá mềm comment (đánh dấu deleted_at).
