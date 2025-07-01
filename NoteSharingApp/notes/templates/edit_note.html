@@ -16,9 +16,7 @@
       src="https://cdn.tiny.cloud/1/xfe1ajckr5bngkcosxjwq0flmm0xzo9aufq6ffi6okktajdj/tinymce/7/tinymce.min.js"
       referrer-policy="origin"
     ></script>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
       :root {
@@ -257,14 +255,71 @@
     <div class="container">
       <h1>Edit Note</h1>
       <form method="post" novalidate>
-        {% csrf_token %} {{ form.as_p }}
+        {% csrf_token %} 
+        
+        {{ form.id }}
+        {{ form.created_at }}
+        {{ form.updated_at }}
+        {{ form.deleted_at }}
+        {{ form.create_by }}
+        {{ form.workspace }}
+
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <ul class="errorlist">
+                    {% for error in form.title.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.content.id_for_label }}">{{ form.content.label }}</label>
+            {{ form.content }}
+            {% if form.content.errors %}
+                <ul class="errorlist">
+                    {% for error in form.content.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group form-check">
+            {{ form.is_shared_via_link }}
+            <label class="form-check-label" for="{{ form.is_shared_via_link.id_for_label }}">
+                {{ form.is_shared_via_link.label }}
+            </label>
+            {% if form.is_shared_via_link.errors %}
+                <ul class="errorlist">
+                    {% for error in form.is_shared_via_link.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group" id="linkPermissionGroup">
+            <label for="{{ form.link_permission.id_for_label }}">{{ form.link_permission.label }}</label>
+            {{ form.link_permission }}
+            {% if form.link_permission.errors %}
+                <ul class="errorlist">
+                    {% for error in form.link_permission.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
 
         {% if share_link %}
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#shareLinkModal">
+          <button type="button" class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#shareLinkModal">
             Lấy link chia sẻ
           </button>
 
-          <!-- Modal để hiện link chia sẻ -->
           <div class="modal fade" id="shareLinkModal" tabindex="-1" aria-labelledby="shareLinkModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -312,5 +367,47 @@
         </div>
       </form>
     </div>
+
+    <script>
+      tinymce.init({
+        selector: '#note-content',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        tinycomments_mode: 'embedded',
+        tinycomments_author: 'Author name',
+        mergetags_list: [
+          { value: 'Firstname', title: 'First Name' },
+          { value: 'Email', title: 'Email' },
+        ],
+        ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement your AI Assistant")),
+      });
+
+      // JavaScript to toggle visibility of link_permission based on is_shared_via_link
+      document.addEventListener('DOMContentLoaded', function() {
+          const isSharedCheckbox = document.getElementById('id_is_shared_via_link');
+          const linkPermissionGroup = document.getElementById('linkPermissionGroup');
+          const shareLinkButton = document.querySelector('button[data-bs-target="#shareLinkModal"]');
+
+          function toggleLinkPermission() {
+              if (isSharedCheckbox.checked) {
+                  linkPermissionGroup.style.display = 'block';
+                  if (shareLinkButton) {
+                      shareLinkButton.style.display = 'block'; // Show "Lấy link chia sẻ" button
+                  }
+              } else {
+                  linkPermissionGroup.style.display = 'none';
+                  if (shareLinkButton) {
+                      shareLinkButton.style.display = 'none'; // Hide "Lấy link chia sẻ" button
+                  }
+              }
+          }
+
+          // Initial state
+          toggleLinkPermission();
+
+          // Listen for changes
+          isSharedCheckbox.addEventListener('change', toggleLinkPermission);
+      });
+    </script>
   </body>
 </html>
