@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 import uuid # Needed for note.share_token, make sure it's imported if used.
 
 class shareNoteView(BaseView):
-    template_name = 'notes/share_note.html' # Đảm bảo đường dẫn template chính xác
+    template_name = 'share_note.html' # Đảm bảo đường dẫn template chính xác
 
     def get(self, request, note_id):
         note = get_object_or_404(Note, id=note_id, create_by=request.user) # Thêm create_by để đảm bảo chỉ chủ sở hữu có thể xem trang chia sẻ
