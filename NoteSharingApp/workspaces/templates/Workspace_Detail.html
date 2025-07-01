@@ -1,0 +1,120 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Chi tiết Workspace: {{ workspace.name }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet"
+    />
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ workspace.name }}</h1>
+        <div>
+            {# Các nút hành động cho Workspace #}
+            <a href="{% url 'update_workspace' workspace.pk %}" class="btn btn-warning me-2">Sửa Workspace</a>
+            {# DÒNG NÀY ĐÃ ĐƯỢC SỬA ĐỔI #}
+            <button type="button" class="btn btn-danger me-2 delete-workspace-btn" data-delete-url="{% url 'delete_workspace' %}" data-workspace-pk="{{ workspace.pk|safe }}">Xóa Workspace</button>
+            <a href="{% url 'workspace_members_list' workspace.pk %}" class="btn btn-secondary">Quản lý thành viên</a>
+        </div>
+    </div>
+
+    <p class="lead">{{ workspace.description }}</p>
+
+    <hr>
+
+    {# Phần hiển thị danh sách thành viên #}
+    <div class="mb-4">
+        <h3>Thành viên</h3>
+        <ul class="list-group">
+            {% for member_obj in workspace.workspacemember_set.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ member_obj.user.username }} {% if member_obj.isAdmin %}(Admin){% endif %}</span>
+                </li>
+            {% empty %}
+                <li class="list-group-item">Chưa có thành viên nào (ngoại trừ bạn).</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'workspace_member' %}" class="btn btn-sm btn-outline-primary mt-2">Thêm/Quản lý thành viên</a>
+    </div>
+
+    <hr>
+
+    {# Phần hiển thị danh sách ghi chú trong Workspace này #}
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Ghi chú trong Workspace</h3>
+            <a href="{% url 'create_note' %}?workspace_id={{ workspace.pk }}" class="btn btn-success">Tạo ghi chú mới</a>
+        </div>
+        <div id="notes-in-workspace-container">
+            <p>Đang tải ghi chú...</p>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    // Hàm xác nhận xóa workspace
+    function confirmDelete(deleteUrl, pk) {
+        if (confirm("Bạn có chắc chắn muốn xóa workspace này không?")) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = deleteUrl;
+
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = '{{ csrf_token }}'; // Lấy CSRF token từ Django context
+            form.appendChild(csrfInput);
+
+            const pkInput = document.createElement('input');
+            pkInput.type = 'hidden';
+            pkInput.name = 'pk';
+            pkInput.value = pk;
+            form.appendChild(pkInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lắng nghe sự kiện click cho nút xóa workspace
+        const deleteButtons = document.querySelectorAll('.delete-workspace-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const deleteUrl = this.dataset.deleteUrl;
+                const workspacePk = this.dataset.workspacePk;
+                confirmDelete(deleteUrl, workspacePk);
+            });
+        });
+
+        // Tải danh sách ghi chú bằng AJAX (phần này giữ nguyên từ trước)
+        const notesContainer = document.getElementById('notes-in-workspace-container');
+        if (notesContainer) {
+            const notesUrl = "{% url 'workspace_notes_list' workspace.pk %}";
+
+            fetch(notesUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    notesContainer.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error("Lỗi khi tải ghi chú:", error);
+                    notesContainer.innerHTML = "<p>Không thể tải ghi chú.</p>";
+                });
+        }
+    });
+</script>
+{% endblock %}

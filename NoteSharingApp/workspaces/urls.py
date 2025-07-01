@@ -30,7 +30,7 @@ urlpatterns = [
 
     path('delete/', DeleteWorkspaceView.as_view(), name="delete_workspace"),
 
-    path('update/', UpdateWorkspaceView.as_view(), name='update_workspace'),
+    path('<int:pk>/update/', UpdateWorkspaceView.as_view(), name='update_workspace'),
 
     #Xóa, thêm 1 file -> json truyền file Id
     path('files/<int:pk>', WorkspaceFileView.as_view(), name="file_workspace"),
