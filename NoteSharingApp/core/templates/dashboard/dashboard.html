@@ -4,24 +4,25 @@
 {% block title %}Dashboard - My Notes{% endblock %}
 
 {% block head %}
-{{ block.super }}
-<link rel="stylesheet" href="{% static 'core/css/custom_dashboard.css' %}" />
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'core/css/custom_dashboard.css' %}" />
 {% endblock %}
 
 {% block content %}
 <div class="container dashboard-container">
   <h1 class="dashboard-title">Welcome to My Notes!</h1>
 
+  <!-- My Notes -->
   <div class="notes-section my-notes-section">
     <h2 class="section-title"><i class="fas fa-sticky-note"></i> My Notes</h2>
     <div class="note-grid">
-      {% if notes %} {# <-- Sửa từ 'my_notes' thành 'notes' #}
-        {% for note in notes %} {# <-- Sửa từ 'my_notes' thành 'notes' #}
+      {% if notes %}
+        {% for note in notes %}
           <div class="note-card">
             <h3 class="note-card-title">{{ note.title }}</h3>
             <p class="note-card-content">{{ note.content|truncatechars:200 }}</p>
             <div class="note-card-meta">
-              <span>Created by: {{ note.create_by.username }}</span> {# <-- CHÚ Ý: `create_by` thay vì `created_by` #}
+              <span>Created by: {{ note.create_by.username }}</span>
               <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
               <span>Last updated: {{ note.updated_at|date:"F j, Y H:i" }}</span>
             </div>
@@ -46,20 +47,22 @@
     </div>
   </div>
 
+  <!-- Shared Notes -->
   <div class="notes-section shared-notes-section mt-5">
     <h2 class="section-title"><i class="fas fa-share-alt"></i> Notes Shared with Me</h2>
     <div class="note-grid">
-      {% if notes_shared_with_me %} {# <-- Sửa từ 'shared_notes' thành 'notes_shared_with_me' #}
-        {% for note in notes_shared_with_me %} {# <-- Sửa từ 'shared_notes' thành 'notes_shared_with_me' #}
+      {% if shared_notes %}
+        {% for shared in shared_notes %}
           <div class="note-card shared-note-card">
-            <h3 class="note-card-title">{{ note.title }}</h3>
-            <p class="note-card-content">{{ note.content|truncatechars:200 }}</p>
+            <h3 class="note-card-title">{{ shared.note.title }}</h3>
+            <p class="note-card-content">{{ shared.note.content|truncatechars:200 }}</p>
             <div class="note-card-meta">
-              <span>Shared by: {{ note.create_by.username }}</span> {# <-- CHÚ Ý: `create_by` thay vì `created_by` #}
-              <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
+              <span>Shared by: {{ shared.share_by.username }}</span>
+              <span>Created at: {{ shared.note.created_at|date:"F j, Y H:i" }}</span>
+              <span>Last updated: {{ shared.note.updated_at|date:"F j, Y H:i" }}</span>
             </div>
             <div class="note-card-actions">
-              <a href="{% url 'view_shared_note' note.id %}" class="btn btn-sm btn-primary">
+              <a href="{% url 'view_note' shared.note.id %}" class="btn btn-sm btn-primary">
                 <i class="fas fa-eye"></i> Xem
               </a>
             </div>
