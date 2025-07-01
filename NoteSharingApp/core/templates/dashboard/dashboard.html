@@ -24,6 +24,31 @@
         .page-link:hover {
             color: #3a7bd5; /* Darker primary color on hover */
         }
+
+        /* Custom styles for the search bar (adjust as needed) */
+        .search-section {
+            margin-bottom: 25px; /* More space below the search bar */
+        }
+        .search-section .input-group {
+            box-shadow: 0 2px 4px rgba(0,0,0,.08); /* Subtle shadow for depth */
+            border-radius: .25rem; /* Rounded corners */
+            overflow: hidden; /* Ensures shadow/border apply correctly to children */
+        }
+        .search-section .form-control {
+            border: none; /* Remove default input border */
+            box-shadow: none; /* Remove default focus shadow */
+            padding: .75rem 1rem; /* Adjust padding */
+        }
+        .search-section .btn-primary {
+            background-color: #4a90e2; /* Match your primary color */
+            border-color: #4a90e2;
+            font-weight: 600; /* Slightly bolder text for button */
+            padding: .75rem 1.25rem; /* Adjust padding */
+        }
+        .search-section .btn-primary:hover {
+            background-color: #3a7bd5; /* Darker on hover */
+            border-color: #3a7bd5;
+        }
     </style>
 {% endblock %}
 
@@ -31,10 +56,22 @@
 <div class="container dashboard-container">
     <h1 class="dashboard-title">Welcome to My Notes!</h1>
 
+    {# Search Form #}
+    <div class="search-section"> {# Removed mb-4 here, moved to internal style #}
+        <form action="{% url 'dashboard' %}" method="get" class="form-inline justify-content-center">
+            <div class="input-group" style="width: 100%; max-width: 600px;">
+                <input type="text" class="form-control" placeholder="Search my notes..." name="q" value="{{ search_query }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="notes-section my-notes-section">
         <h2 class="section-title"><i class="fas fa-sticky-note"></i> My Notes</h2>
         <div class="note-grid">
-            {% if notes %} {# 'notes' is now my_notes_page_obj from the view #}
+            {% if notes %}
                 {% for note in notes %}
                     <div class="note-card">
                         <a href="{% url 'view_note' note.id %}" class="note-card-link">
@@ -61,7 +98,11 @@
                 {% endfor %}
             {% else %}
                 <p class="no-notes-message">
-                    <a href="{% url 'create_note' %}">You don't have any notes yet. Start by adding a new one!</a>
+                    {% if search_query %}
+                        No notes found matching "{{ search_query }}".
+                    {% else %}
+                        <a href="{% url 'create_note' %}">You don't have any notes yet. Start by adding a new one!</a>
+                    {% endif %}
                 </p>
             {% endif %}
         </div>
@@ -70,10 +111,12 @@
         {% if notes.has_other_pages %}
             <nav aria-label="My Notes pagination">
                 <ul class="pagination justify-content-center mt-4">
+                    {% url 'dashboard' as dashboard_base_url %}
                     {% if notes.has_previous %}
                         <li class="page-item">
-                            {# Preserve shared_page parameter if it exists #}
-                            <a class="page-link" href="?my_page={{ notes.previous_page_number }}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}" aria-label="Previous">
+                            <a class="page-link" 
+                               href="{{ dashboard_base_url }}?my_page={{ notes.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}" 
+                               aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
@@ -86,7 +129,8 @@
                             <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
                         {% else %}
                             <li class="page-item">
-                                <a class="page-link" href="?my_page={{ i }}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}">
+                                <a class="page-link" 
+                                   href="{{ dashboard_base_url }}?my_page={{ i }}{% if search_query %}&q={{ search_query }}{% endif %}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}">
                                     {{ i }}
                                 </a>
                             </li>
@@ -95,8 +139,9 @@
 
                     {% if notes.has_next %}
                         <li class="page-item">
-                            {# Preserve shared_page parameter if it exists #}
-                            <a class="page-link" href="?my_page={{ notes.next_page_number }}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}" aria-label="Next">
+                            <a class="page-link" 
+                               href="{{ dashboard_base_url }}?my_page={{ notes.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}" 
+                               aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -111,7 +156,7 @@
     <div class="notes-section shared-notes-section mt-5">
         <h2 class="section-title"><i class="fas fa-share-alt"></i> Notes shared with me</h2>
         <div class="note-grid">
-            {% if shared_notes %} {# 'shared_notes' is now shared_notes_page_obj from the view #}
+            {% if shared_notes %}
                 {% for shared in shared_notes %}
                     <div class="note-card shared-note-card">
                         <a href="{% url 'view_note' shared.note.id %}" class="note-card-link">
@@ -131,7 +176,13 @@
                     </div>
                 {% endfor %}
             {% else %}
-                <p class="no-notes-message">No notes have been shared with you.</p>
+                <p class="no-notes-message">
+                    {% if search_query %}
+                        No shared notes found matching "{{ search_query }}".
+                    {% else %}
+                        No notes have been shared with you.
+                    {% endif %}
+                </p>
             {% endif %}
         </div>
 
@@ -139,15 +190,17 @@
         {% if shared_notes.has_other_pages %}
             <nav aria-label="Shared Notes pagination">
                 <ul class="pagination justify-content-center mt-4">
+                    {% url 'dashboard' as dashboard_base_url %}
                     {% if shared_notes.has_previous %}
                         <li class="page-item">
-                            {# Preserve my_page parameter if it exists #}
-                            <a class="page-link" href="?shared_page={{ shared_notes.previous_page_number }}{% if notes.number %}&my_page={{ notes.number }}{% endif %}" aria-label="Previous">
+                            <a class="page-link" 
+                               href="{{ dashboard_base_url }}?shared_page={{ shared_notes.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if notes.number %}&my_page={{ notes.number }}{% endif %}" 
+                               aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                     {% else %}
-                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
                     {% endif %}
 
                     {% for i in shared_notes.paginator.page_range %}
@@ -155,7 +208,8 @@
                             <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
                         {% else %}
                             <li class="page-item">
-                                <a class="page-link" href="?shared_page={{ i }}{% if notes.number %}&my_page={{ notes.number }}{% endif %}">
+                                <a class="page-link" 
+                                   href="{{ dashboard_base_url }}?shared_page={{ i }}{% if search_query %}&q={{ search_query }}{% endif %}{% if notes.number %}&my_page={{ notes.number }}{% endif %}">
                                     {{ i }}
                                 </a>
                             </li>
@@ -164,8 +218,9 @@
 
                     {% if shared_notes.has_next %}
                         <li class="page-item">
-                            {# Preserve my_page parameter if it exists #}
-                            <a class="page-link" href="?shared_page={{ shared_notes.next_page_number }}{% if notes.number %}&my_page={{ notes.number }}{% endif %}" aria-label="Next">
+                            <a class="page-link" 
+                               href="{{ dashboard_base_url }}?shared_page={{ shared_notes.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if notes.number %}&my_page={{ notes.number }}{% endif %}" 
+                               aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

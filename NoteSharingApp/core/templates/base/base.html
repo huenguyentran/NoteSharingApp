@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi"> {# Đổi ngôn ngữ sang tiếng Việt #}
+<html lang="en"> {# Changed language to English #}
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,10 +16,10 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    {% load static %} {# Đảm bảo load static ở đây #}
+    {% load static %} {# Ensure static files are loaded here #}
     
     <style>
-        /* CSS tùy chỉnh cho widget người dùng */
+        /* Custom CSS for user widget */
         .user-display {
             background-color: #e9ecef;
             padding: 5px 15px;
@@ -30,7 +30,7 @@
         .user-display i {
             color: #007bff;
         }
-        /* CSS cho tin nhắn Django */
+        /* CSS for Django messages */
         .alert-dismissible .btn-close {
             position: absolute;
             top: 0;
@@ -38,15 +38,19 @@
             padding: 0.75rem 1.25rem;
             color: inherit;
         }
+        /* Optional: Add some padding to the main content area */
+        main.container {
+            padding-bottom: 70px; /* Adjust as needed for footer */
+        }
     </style>
 
-    {% block head %}{% endblock %} {# Block cho CSS/JS riêng của từng trang #}
+    {% block head %}{% endblock %} {# Block for page-specific CSS/JS #}
   </head>
 
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        {# THAY ĐỔI DÒNG NÀY: Dùng 'dashboard' làm trang chính #}
+        {# Changed to 'dashboard' as the main page #}
         <a class="navbar-brand" href="{% url 'dashboard' %}">My Notes</a> 
         <button
           class="navbar-toggler"
@@ -62,22 +66,42 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            {# THAY THẾ KHỐI NAV-ITEM NÀY BẰNG CÁC ĐIỀU KIỆN ĐĂNG NHẬP #}
+            {# Conditional navigation items based on login status #}
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    {# Sử dụng request.resolver_match.url_name để làm active class #}
+                    {# Use request.resolver_match.url_name for active class #}
                     <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'create_note' %}active{% endif %}" href="{% url 'create_note' %}">Tạo ghi chú</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'create_note' %}active{% endif %}" href="{% url 'create_note' %}">Create New Note</a>
                 </li>
-                {# Liên kết đến workspace_main nếu cần - Giữ nguyên khối comment của bạn #}
+                {# Link to workspace_main if needed - Kept your comment block #}
                 {% comment %}
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'workspace_main' %}">Không gian làm việc</a>
+                  <a class="nav-link" href="{% url 'workspace_main' %}">Workspace</a>
                 </li>
                 {% endcomment %}
-                
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+                </li>
+            {% endif %}
+          </ul>
+          
+          {# User profile widget and Account dropdown #}
+          {% if user.is_authenticated %}
+            {# User profile widget #}
+            <div id="userProfileWidget" class="auth-section d-flex align-items-center ms-auto"> {# Changed ms-3 to ms-auto to push to right #}
+              <div class="user-display d-flex align-items-center me-3"> {# Add me-3 for spacing before dropdown #}
+                <i class="fa-solid fa-user-circle me-2"></i>
+                <span class="fw-bold">Welcome, {{ user.username }}!</span>
+              </div>
+              
+              {# Account Dropdown #}
+              <ul class="navbar-nav"> {# Wrap dropdown in ul.navbar-nav for proper alignment #}
                 <li class="nav-item dropdown">
                   <a
                     class="nav-link dropdown-toggle"
@@ -86,56 +110,27 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    Tài khoản
+                    Account
                   </a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Cài đặt</a></li> {# URL cho Cài đặt cần được định nghĩa #}
-                    <li><a class="dropdown-item" href="#">Trợ giúp</a></li> {# URL cho Trợ giúp cần được định nghĩa #}
+                  <ul class="dropdown-menu dropdown-menu-end"> {# Added dropdown-menu-end to align right #}
+                    <li><a class="dropdown-item" href="{% url 'account_settings' %}">Settings</a></li> {# Updated URL for Settings #}
+                    {# Removed only Help link as per request #}
+                    {# <li><a class="dropdown-item" href="#">Help</a></li> #}
                     <li><hr class="dropdown-divider" /></li>
                     <li>
-                      <a class="dropdown-item" href="{% url 'logout' %}">Đăng xuất</a>
+                      <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                     </li>
                   </ul>
                 </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Đăng nhập</a> {# URL 'login' từ auth của Django #}
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'register' %}">Đăng ký</a> {# URL 'register' cần được định nghĩa trong app 'authentication' của bạn #}
-                </li>
-            {% endif %}
-          </ul>
-          
-          {# DI CHUYỂN KHỐI FORM VÀ USER PROFILE WIDGET VÀO ĐÂY VÀ THÊM ĐIỀU KIỆN #}
-          {% if user.is_authenticated %}
-            <form class="d-flex" role="search" action="{% url 'dashboard' %}" method="get"> {# Đổi action về dashboard #}
-              <input
-                class="form-control me-2"
-                type="search"
-                placeholder="Tìm kiếm ghi chú của tôi..." {# Thay đổi placeholder #}
-                aria-label="Search"
-                name="search"
-              />
-              <button class="btn btn-outline-success" type="submit">
-                Tìm kiếm
-              </button>
-            </form>
-
-            {# Widget hồ sơ người dùng #}
-            <div id="userProfileWidget" class="auth-section d-flex align-items-center ms-3">
-              <div class="user-display d-flex align-items-center">
-                <i class="fa-solid fa-user-circle me-2"></i>
-                <span class="fw-bold">Chào mừng, {{ user.username }}!</span>
-              </div>
+              </ul>
             </div>
-          {% endif %} {# Kết thúc if user.is_authenticated cho form và widget #}
+          {% endif %} {# End if user.is_authenticated for user widget and dropdown #}
 
         </div>
       </div>
     </nav>
 
-    {# BỔ SUNG KHỐI HIỂN THỊ THÔNG BÁO CỦA DJANGO #}
+    {# Django messages block #}
     <div class="container mt-4">
         {% if messages %}
             {% for message in messages %}
@@ -150,9 +145,9 @@
 
     <main class="container mt-4">{% block content %} {% endblock %}</main>
 
-    {# BỔ SUNG FOOTER #}
+    {# Footer #}
     <footer class="mt-5 py-3 bg-light text-center text-muted">
-        SE332.P22
+        &copy; SE332.P22
     </footer>
 
     <script

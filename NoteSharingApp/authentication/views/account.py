@@ -63,7 +63,7 @@ class AccountView(BaseView):
         messages.success(request, "Mật khẩu đã được thay đổi.")
         return redirect('account_settings')
       else:
-        messages.error(request, "Nhập sai thông tintin.")
+        messages.error(request, "Nhập sai thông tin.")
 
       return render(request, self.template_name, {
         'account_form': account_form,
