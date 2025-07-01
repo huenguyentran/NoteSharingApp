@@ -1,0 +1,143 @@
+/* General styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+.dashboard-container {
+    padding: 30px 15px;
+    max-width: 1200px; /* Adjust as needed */
+    margin: 0 auto;
+}
+
+.dashboard-title {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #007bff;
+    font-weight: 600;
+}
+
+/* Section styling */
+.notes-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: #333;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.section-title i {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+/* Note Grid */
+.note-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 25px;
+}
+
+/* Note Card Styling */
+.note-card {
+    background-color: #fefefe;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.note-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.note-card-title {
+    font-size: 1.4rem;
+    color: #007bff;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Ensure long titles wrap */
+}
+
+.note-card-content {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    flex-grow: 1; /* Allows content to take available space */
+    max-height: 150px; /* Limit content height */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+}
+
+.note-card-meta {
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: auto; /* Pushes meta to the bottom */
+    border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
+    margin-top: 15px;
+}
+
+.note-card-meta span {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.note-card-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* Align buttons to the right */
+}
+
+.note-card-actions .btn {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.note-card-actions .btn i {
+    margin-right: 5px;
+}
+
+/* Shared Note Specific Styling */
+.shared-note-card {
+    border-left: 5px solid #28a745; /* Green border for shared notes */
+}
+
+/* No notes message */
+.no-notes-message {
+    text-align: center;
+    font-style: italic;
+    color: #6c757d;
+    grid-column: 1 / -1; /* Center across all columns in the grid */
+    padding: 20px;
+    border: 1px dashed #ced4da;
+    border-radius: 5px;
+    background-color: #f1f3f5;
+}
+
+.no-notes-message a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.no-notes-message a:hover {
+    text-decoration: underline;
+}

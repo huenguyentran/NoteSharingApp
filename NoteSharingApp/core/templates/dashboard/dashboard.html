@@ -1,62 +1,76 @@
-{% extends "base/base.html" %} 
-{%load static%} 
+{% extends "base/base.html" %}
+{% load static %}
 
-{% block title %}Dashboard{%endblock %} 
+{% block title %}Dashboard - My Notes{% endblock %}
 
 {% block head %}
-<!-- CSS, fonts, v.v. -->
-<link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}" />
-<link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
-  rel="stylesheet"
-/>
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'core/css/custom_dashboard.css' %}" />
 {% endblock %}
 
 {% block content %}
-<div class="auth-header">
-  <div id="userProfileWidget" class="auth-section expanded">
-    <div class="collapse-icon">
-      <i class="fa-solid fa-user-circle"></i>
-    </div>
+<div class="container dashboard-container">
+  <h1 class="dashboard-title">Welcome to My Notes!</h1>
 
-    <div class="user-display">
-      <h2>Welcome, {{ user.username }}!</h2>
+  <div class="notes-section my-notes-section">
+    <h2 class="section-title"><i class="fas fa-sticky-note"></i> My Notes</h2>
+    <div class="note-grid">
+      {% if notes %} {# <-- Sửa từ 'my_notes' thành 'notes' #}
+        {% for note in notes %} {# <-- Sửa từ 'my_notes' thành 'notes' #}
+          <div class="note-card">
+            <h3 class="note-card-title">{{ note.title }}</h3>
+            <p class="note-card-content">{{ note.content|truncatechars:200 }}</p>
+            <div class="note-card-meta">
+              <span>Created by: {{ note.create_by.username }}</span> {# <-- CHÚ Ý: `create_by` thay vì `created_by` #}
+              <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
+              <span>Last updated: {{ note.updated_at|date:"F j, Y H:i" }}</span>
+            </div>
+            <div class="note-card-actions">
+              <a href="{% url 'edit_note' note.id %}" class="btn btn-sm btn-info">
+                <i class="fas fa-edit"></i> Sửa
+              </a>
+              <a href="{% url 'delete_note' note.id %}" class="btn btn-sm btn-danger">
+                <i class="fas fa-trash-alt"></i> Xóa
+              </a>
+              <a href="{% url 'share_note' note.id %}" class="btn btn-sm btn-success">
+                <i class="fas fa-share-alt"></i> Chia sẻ
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-notes-message">
+          <a href="{% url 'create_note' %}">You don't have any notes yet. Start by adding a new one!</a>
+        </p>
+      {% endif %}
     </div>
+  </div>
 
-    <div class="user-details">
-      <p>Email: {{ user.email }}</p>
-      <p>First Name: {{ user.first_name }}</p>
-      <p>Last Name: {{ user.last_name }}</p>
+  <div class="notes-section shared-notes-section mt-5">
+    <h2 class="section-title"><i class="fas fa-share-alt"></i> Notes Shared with Me</h2>
+    <div class="note-grid">
+      {% if notes_shared_with_me %} {# <-- Sửa từ 'shared_notes' thành 'notes_shared_with_me' #}
+        {% for note in notes_shared_with_me %} {# <-- Sửa từ 'shared_notes' thành 'notes_shared_with_me' #}
+          <div class="note-card shared-note-card">
+            <h3 class="note-card-title">{{ note.title }}</h3>
+            <p class="note-card-content">{{ note.content|truncatechars:200 }}</p>
+            <div class="note-card-meta">
+              <span>Shared by: {{ note.create_by.username }}</span> {# <-- CHÚ Ý: `create_by` thay vì `created_by` #}
+              <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
+            </div>
+            <div class="note-card-actions">
+              <a href="{% url 'view_shared_note' note.id %}" class="btn btn-sm btn-primary">
+                <i class="fas fa-eye"></i> Xem
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-notes-message">No notes have been shared with you yet.</p>
+      {% endif %}
     </div>
-
-    <a href="{% url 'logout' %}" class="button">Logout</a>
   </div>
 </div>
-
-<div class="container">
-  <h1>Welcome to My Notes!</h1>
-  <h2>My Notes</h2>
-  <ul class="note-list">
-    {% if notes %} {% for note in notes %}
-    <li class="note-item">
-      <strong>{{ note.title }}</strong>
-      <div class="note-content">{{ note.content }}</div>
-      <div class="note-meta">
-        <span>Created by: {{ note.created_by.username }}</span>
-        <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
-        <span>Last updated: {{ note.updated_at|date:"F j, Y H:i" }}</span>
-      </div>
-    </li>
-    {% endfor %} {% else %}
-    <li class="no-notes">
-      <p>You don't have any notes yet. Start by adding a new one!</p>
-    </li>
-    {% endif %}
-  </ul>
-</div>
-
-<footer>&copy; 2025 My Notes App. All rights reserved.</footer>
-
 {% endblock %}
 
 {% block script %}

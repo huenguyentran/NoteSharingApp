@@ -1,23 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi"> {# Đổi ngôn ngữ sang tiếng Việt #}
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Dashboard{% endblock %}</title>
+    <title>{% block title %}My Notes App{% endblock %}</title>
+    
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
       crossorigin="anonymous"
     />
-    {% block head %}{% endblock %}
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    {% load static %} {# Đảm bảo load static ở đây #}
+    
+    <style>
+        /* CSS tùy chỉnh cho widget người dùng */
+        .user-display {
+            background-color: #e9ecef;
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: #333;
+            font-size: 0.9em;
+        }
+        .user-display i {
+            color: #007bff;
+        }
+        /* CSS cho tin nhắn Django */
+        .alert-dismissible .btn-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.75rem 1.25rem;
+            color: inherit;
+        }
+    </style>
+
+    {% block head %}{% endblock %} {# Block cho CSS/JS riêng của từng trang #}
   </head>
 
-  
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">Navbar</a>
+        {# THAY ĐỔI DÒNG NÀY: Dùng 'dashboard' làm trang chính #}
+        <a class="navbar-brand" href="{% url 'dashboard' %}">My Notes</a> 
         <button
           class="navbar-toggler"
           type="button"
@@ -30,70 +60,107 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-
-
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'note_main' %}">Ghi chú</a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'workspace_main' %}">Ghi chú</a>
-            </li>
-
-
-            
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Dropdown
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <a class="dropdown-item" href="#">Something else here</a>
+            {# THAY THẾ KHỐI NAV-ITEM NÀY BẰNG CÁC ĐIỀU KIỆN ĐĂNG NHẬP #}
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    {# Sử dụng request.resolver_match.url_name để làm active class #}
+                    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'create_note' %}active{% endif %}" href="{% url 'create_note' %}">Tạo ghi chú</a>
+                </li>
+                {# Liên kết đến workspace_main nếu cần - Giữ nguyên khối comment của bạn #}
+                {% comment %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'workspace_main' %}">Không gian làm việc</a>
+                </li>
+                {% endcomment %}
+                
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Tài khoản
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Cài đặt</a></li> {# URL cho Cài đặt cần được định nghĩa #}
+                    <li><a class="dropdown-item" href="#">Trợ giúp</a></li> {# URL cho Trợ giúp cần được định nghĩa #}
+                    <li><hr class="dropdown-divider" /></li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'logout' %}">Đăng xuất</a>
+                    </li>
+                  </ul>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Đăng nhập</a> {# URL 'login' từ auth của Django #}
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'register' %}">Đăng ký</a> {# URL 'register' cần được định nghĩa trong app 'authentication' của bạn #}
+                </li>
+            {% endif %}
           </ul>
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
+          
+          {# DI CHUYỂN KHỐI FORM VÀ USER PROFILE WIDGET VÀO ĐÂY VÀ THÊM ĐIỀU KIỆN #}
+          {% if user.is_authenticated %}
+            <form class="d-flex" role="search" action="{% url 'dashboard' %}" method="get"> {# Đổi action về dashboard #}
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Tìm kiếm ghi chú của tôi..." {# Thay đổi placeholder #}
+                aria-label="Search"
+                name="search"
+              />
+              <button class="btn btn-outline-success" type="submit">
+                Tìm kiếm
+              </button>
+            </form>
+
+            {# Widget hồ sơ người dùng #}
+            <div id="userProfileWidget" class="auth-section d-flex align-items-center ms-3">
+              <div class="user-display d-flex align-items-center">
+                <i class="fa-solid fa-user-circle me-2"></i>
+                <span class="fw-bold">Chào mừng, {{ user.username }}!</span>
+              </div>
+            </div>
+          {% endif %} {# Kết thúc if user.is_authenticated cho form và widget #}
+
         </div>
       </div>
     </nav>
 
+    {# BỔ SUNG KHỐI HIỂN THỊ THÔNG BÁO CỦA DJANGO #}
+    <div class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+
     <main class="container mt-4">{% block content %} {% endblock %}</main>
+
+    {# BỔ SUNG FOOTER #}
+    <footer class="mt-5 py-3 bg-light text-center text-muted">
+        &copy; 2025 Note Sharing App. All rights reserved.
+    </footer>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
       crossorigin="anonymous"
     ></script>
-
+    
     {% block script %}{% endblock %}
   </body>
 </html>
