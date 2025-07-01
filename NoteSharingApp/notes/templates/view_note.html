@@ -74,21 +74,21 @@
 
   .note-display .display-value {
    width: 100%;
-   padding: 12px; /* Tăng padding cho dễ nhìn */
-   border: 1px solid transparent; /* Loại bỏ viền */
+   padding: 12px;
+   border: 1px solid transparent;
    border-radius: 8px;
    font-family: "Poppins", sans-serif;
    font-size: 1em;
    box-sizing: border-box;
-   background-color: #f9f9f9; /* Màu nền nhạt để phân biệt */
+   background-color: #f9f9f9;
    word-wrap: break-word;
    min-height: 40px;
-   line-height: 1.6; /* Khoảng cách dòng */
+   line-height: 1.6;
   }
 
   .note-display .content-value {
    min-height: 250px;
-   white-space: pre-wrap; /* Hiển thị xuống dòng và khoảng trắng */
+   white-space: pre-wrap;
   }
 
   /* Thông tin meta */
@@ -192,18 +192,27 @@
   </div>
 
   <div class="form-actions">
-   <a href="{% url 'edit_note' note.id %}" class="button button-primary">
-    <i class="fas fa-edit"></i> Sửa Ghi Chú
-   </a>
+   {% if permission == 'owner' or permission == 'edit' %}
+    <a href="{% url 'edit_note' note.id %}" class="button button-primary">
+     <i class="fas fa-edit"></i> Sửa Ghi Chú
+    </a>
+   {% endif %}
+
    <a href="{% url 'dashboard' %}" class="button button-secondary">
     <i class="fas fa-arrow-left"></i> Quay lại Dashboard
    </a>
-   <a href="{% url 'share_note' note.id %}" class="button button-primary">
-    <i class="fas fa-share-alt"></i> Chia sẻ
-   </a>
-   <a href="{% url 'delete_note' note.id %}" class="button button-secondary">
-    <i class="fas fa-trash-alt"></i> Xóa
-   </a>
+
+   {% if is_owner %} {# Chỉ hiển thị nút Chia sẻ nếu là chủ sở hữu của ghi chú #}
+    <a href="{% url 'share_note' note.id %}" class="button button-primary">
+     <i class="fas fa-share-alt"></i> Chia sẻ
+    </a>
+   {% endif %}
+
+   {% if is_owner %} {# Nút Xóa cũng chỉ hiển thị cho chủ sở hữu #}
+    <a href="{% url 'delete_note' note.id %}" class="button button-secondary">
+     <i class="fas fa-trash-alt"></i> Xóa
+    </a>
+   {% endif %}
   </div>
  </div>
 </body>

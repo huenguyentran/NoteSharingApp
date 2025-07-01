@@ -402,10 +402,6 @@
       </div>
       {% endif %}
 
-      <button type="button" class="button button-info" onclick="openSearchModal()">
-        <i class="fas fa-search"></i> Tìm người dùng
-      </button>
-
       <form method="post">
         {% csrf_token %} 
 
@@ -436,7 +432,7 @@
         
         <div class="form-actions">
           <button type="submit" class="button button-primary"><i class="fas fa-share-alt"></i> Chia sẻ</button>
-          <a href="{% url 'dashboard' %}" class="button button-secondary"><i class="fas fa-times-circle"></i> Hủy</a>
+          <a href="{% url 'dashboard' %}" class="button button-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Quay lại Dashboard</a>
         </div>
       </form>
       
@@ -474,28 +470,6 @@
       {% endif %}
     </div>
 
-
-    <!-- viết script mỗi khi search-input thay đổi -> fetch ra danh sách user từ api bên users -->
-    <div id="userSearchModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; justify-content:center; align-items:center;">
-    <div style="background:#fff; padding:20px 25px; border-radius:12px; max-width:500px; width:90%; box-shadow:0 10px 30px rgba(0,0,0,0.2); position:relative;">
-      <h2 style="margin-top:0; font-size:1.4em; color:#4a90e2;">Tìm người dùng</h2>
-      <input type="text" id="search-input" placeholder="Nhập tên hoặc email..." style="width:100%; padding:10px 12px; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;" oninput="searchUsersModal()" />
-
-      <div id="modal-user-list">
-        {% for user in users %}
-        <label class="user-item" style="display:block; padding:8px 0; cursor:pointer;">
-          <input type="checkbox" name="share_with_ids" value="{{ user.id }}" />
-          {{ user.username }} ({{ user.email }})
-        </label>
-        {% endfor %}
-      </div>
-
-      <div style="text-align:right; margin-top:20px;">
-        <button class="button button-secondary" onclick="closeSearchModal()">Đóng</button>
-      </div>
-    </div>
-  </div>
-
     <script src="{% static 'notes/js/user.js' %}"></script>
     <script>
 
@@ -515,26 +489,6 @@
                 if (noSharedUsersMessage) noSharedUsersMessage.style.display = 'block';
             }
         });
-    </script>
-
-    <script>
-      function openSearchModal() {
-        document.getElementById("userSearchModal").style.display = "flex";
-      }
-
-      function closeSearchModal() {
-        document.getElementById("userSearchModal").style.display = "none";
-      }
-
-      function searchUsersModal() {
-        const input = document.getElementById("modal-search-input").value.toLowerCase();
-        const items = document.querySelectorAll("#modal-user-list .user-item");
-
-        items.forEach(item => {
-          const text = item.textContent.toLowerCase();
-          item.style.display = text.includes(input) ? "block" : "none";
-        });
-      }
     </script>
   </body>
 </html>
