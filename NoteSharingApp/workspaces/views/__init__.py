@@ -1,7 +1,7 @@
 from .WorkspaceMain_View import WorkspaceMainView
 from .WorkspaceList_view import WorkspaceListView
 from .getMember_view import MemberListView
-from .getNotesWorkspace_View import NoteWorkspaceListView
+from .getNotesWorkspace_View import GetNotesWorkspaceView 
 from .getFileWorkspace_View import FileWorkspaceListView
 
 

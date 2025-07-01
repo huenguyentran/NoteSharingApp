@@ -5,6 +5,9 @@ from core.views.BaseView import BaseView # Đảm bảo BaseView của bạn đ�
 
 from notes.models import Note
 from notes.forms.createNoteForm import CreateNoteForm
+from workspaces.models import Workspace
+from django.shortcuts import render, redirect, get_object_or_404 # <--- THÊM get_object_or_404
+from django.urls import reverse # <--- THÊM reverse
 
 
 class createNoteView(BaseView):
@@ -14,26 +17,32 @@ class createNoteView(BaseView):
         return render(request, 'create_note.html', {'form': form})
 
     def post(self, request):
-        # Khởi tạo form với dữ liệu POST
         form = CreateNoteForm(request.POST)
 
-        # Kiểm tra tính hợp lệ của form
         if form.is_valid():
-            # Lưu form nhưng không commit vào CSDL ngay lập tức (commit=False)
-            # Điều này cho phép chúng ta gán thêm các thuộc tính cho đối tượng Note trước khi lưu
             note = form.save(commit=False)
-            
-            # Gán người dùng hiện tại (người tạo ghi chú) vào trường 'create_by'
-            # Giả sử trường 'create_by' trong Note model của bạn là một ForeignKey tới User model
             note.create_by = request.user 
-            
-            # Lưu đối tượng Note đã hoàn chỉnh vào cơ sở dữ liệu
-            note.save()
-            
-            # Chuyển hướng người dùng đến trang dashboard sau khi tạo ghi chú thành công
-            # Đảm bảo bạn có một URL với tên 'dashboard' được cấu hình
-            return redirect('dashboard')
-        
-        # Nếu form không hợp lệ, hiển thị lại trang tạo ghi chú với các lỗi form
-        # Form sẽ tự động chứa thông tin đã nhập và lỗi tương ứng
+
+            # Lấy workspace_id từ query parameters (từ URL: ?workspace_id=...)
+            workspace_id = request.GET.get('workspace_id')
+
+            redirect_url = 'dashboard' # Mặc định sẽ chuyển hướng về dashboard
+
+            if workspace_id:
+                try:
+                    # Lấy workspace và kiểm tra quyền của người dùng
+                    # Đảm bảo người dùng hiện tại là thành viên của workspace đó
+                    workspace = get_object_or_404(Workspace, pk=workspace_id, members__user=request.user)
+                    note.workspace = workspace # Gán ghi chú vào workspace này
+                    # Nếu thành công, chuyển hướng về trang chi tiết workspace
+                    redirect_url = reverse('workspace_detail', kwargs={'pk': workspace.pk})
+                except Exception as e:
+                    # Ghi log lỗi hoặc xử lý khác nếu workspace không tìm thấy/không có quyền
+                    print(f"Lỗi khi gán ghi chú vào workspace (ID: {workspace_id}): {e}")
+                    # Bạn có thể thêm message cảnh báo cho người dùng ở đây nếu muốn
+
+            note.save() # Lưu ghi chú sau khi đã gán workspace (nếu có)
+
+            return redirect(redirect_url) # Chuyển hướng đến URL đã xác định
+
         return render(request, 'create_note.html', {'form': form})

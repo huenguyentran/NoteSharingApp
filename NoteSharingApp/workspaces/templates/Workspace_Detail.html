@@ -18,8 +18,8 @@
         <div>
             {# Các nút hành động cho Workspace #}
             <a href="{% url 'update_workspace' workspace.pk %}" class="btn btn-warning me-2">Sửa Workspace</a>
-            {# DÒNG NÀY ĐÃ ĐƯỢC SỬA ĐỔI #}
-            <button type="button" class="btn btn-danger me-2 delete-workspace-btn" data-delete-url="{% url 'delete_workspace' %}" data-workspace-pk="{{ workspace.pk|safe }}">Xóa Workspace</button>
+            {# Nút xóa Workspace - đã được sửa để dùng AJAX/POST (nếu logic backend hỗ trợ) #}
+            <button type="button" class="btn btn-danger me-2 delete-workspace-btn" data-delete-url="{% url 'delete_workspace' %}" data-workspace-pk="{{ workspace.pk }}">Xóa Workspace</button>
             <a href="{% url 'workspace_members_list' workspace.pk %}" class="btn btn-secondary">Quản lý thành viên</a>
         </div>
     </div>
@@ -49,9 +49,11 @@
     <div class="mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3>Ghi chú trong Workspace</h3>
+            {# Chỉ giữ lại MỘT nút Tạo ghi chú mới #}
             <a href="{% url 'create_note' %}?workspace_id={{ workspace.pk }}" class="btn btn-success">Tạo ghi chú mới</a>
         </div>
-        <div id="notes-in-workspace-container">
+        {# Đây là container mà danh sách ghi chú sẽ được tải vào #}
+        <div id="notes-list-container">
             <p>Đang tải ghi chú...</p>
         </div>
     </div>
@@ -62,7 +64,27 @@
 
 {% block script %}
 <script>
-    // Hàm xác nhận xóa workspace
+    // Hàm getCookie (Đảm bảo hàm này có sẵn trong main.js hoặc thêm vào đây nếu cần)
+    // Nếu main.js được tải trước, có thể không cần định nghĩa lại ở đây.
+    // Hàm getCookie (Đảm bảo hàm này có sẵn trong main.js hoặc thêm vào đây nếu cần)
+// Nếu main.js được tải trước, có thể không cần định nghĩa lại ở đây.
+// Nếu không, hãy thêm lại hàm getCookie ở đây:
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+    // Hàm xác nhận xóa workspace (đã có của bạn, tôi giữ nguyên)
     function confirmDelete(deleteUrl, pk) {
         if (confirm("Bạn có chắc chắn muốn xóa workspace này không?")) {
             const form = document.createElement('form');
@@ -72,7 +94,7 @@
             const csrfInput = document.createElement('input');
             csrfInput.type = 'hidden';
             csrfInput.name = 'csrfmiddlewaretoken';
-            csrfInput.value = '{{ csrf_token }}'; // Lấy CSRF token từ Django context
+            csrfInput.value = '{{ csrf_token }}';
             form.appendChild(csrfInput);
 
             const pkInput = document.createElement('input');
@@ -86,6 +108,71 @@
         }
     }
 
+    // --- HÀM MỚI ĐỂ XỬ LÝ XÓA GHI CHÚ BẰNG AJAX ---
+    function confirmDeleteNote(buttonElement) {
+        const deleteUrl = buttonElement.getAttribute('data-delete-url');
+
+        if (confirm('Bạn có chắc chắn muốn xóa ghi chú này không?')) {
+            fetch(deleteUrl, {
+                method: 'POST', // Gửi yêu cầu POST
+                headers: {
+                    'Content-Type': 'application/json', // Có thể bỏ nếu không gửi JSON body
+                    'X-CSRFToken': getCookie('csrftoken'), // Rất quan trọng cho POST request
+                    'X-Requested-With': 'XMLHttpRequest' // Dấu hiệu cho Django biết đây là AJAX
+                },
+                // body: JSON.stringify({}) // Không cần body nếu URL đã có ID
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Phân tích JSON response từ view
+                } else {
+                    // Nếu response không OK, cố gắng đọc lỗi từ JSON hoặc text
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                    }).catch(() => {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    });
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Ghi chú đã được xóa thành công!');
+                    loadNotesForWorkspace(); // Tải lại danh sách ghi chú sau khi xóa
+                } else {
+                    alert('Lỗi: ' + (data.error || 'Xóa ghi chú không thành công.'));
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi xóa ghi chú:', error);
+                alert('Có lỗi xảy ra khi xóa ghi chú: ' + error.message);
+            });
+        }
+    }
+
+    // Hàm để tải danh sách ghi chú cho workspace (đã được sửa tên container)
+    function loadNotesForWorkspace() {
+        const notesUrl = "{% url 'workspace_notes_list' pk=workspace.pk %}";
+        const notesContainer = document.getElementById('notes-list-container'); // Sửa ID container
+        if (notesContainer) {
+            notesContainer.innerHTML = '<p>Đang tải ghi chú...</p>'; // Hiển thị trạng thái tải
+            fetch(notesUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    notesContainer.innerHTML = data;
+                })
+                .catch(error => {
+                    console.error("Lỗi khi tải ghi chú:", error);
+                    notesContainer.innerHTML = "<p>Không thể tải ghi chú.</p>";
+                });
+        }
+    }
+
+
     document.addEventListener('DOMContentLoaded', function() {
         // Lắng nghe sự kiện click cho nút xóa workspace
         const deleteButtons = document.querySelectorAll('.delete-workspace-btn');
@@ -97,24 +184,8 @@
             });
         });
 
-        // Tải danh sách ghi chú bằng AJAX (phần này giữ nguyên từ trước)
-        const notesContainer = document.getElementById('notes-in-workspace-container');
-        if (notesContainer) {
-            const notesUrl = "{% url 'workspace_notes_list' workspace.pk %}";
-
-            fetch(notesUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    return response.text();
-                })
-                .then(html => {
-                    notesContainer.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error("Lỗi khi tải ghi chú:", error);
-                    notesContainer.innerHTML = "<p>Không thể tải ghi chú.</p>";
-                });
-        }
+        // Gọi hàm tải ghi chú khi DOM đã tải xong
+        loadNotesForWorkspace();
     });
 </script>
 {% endblock %}

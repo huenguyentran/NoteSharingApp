@@ -3,8 +3,9 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import WorkspaceListView, WorkspaceMainView, MemberListView, DetailWorkspaceView
-from .views import NoteWorkspaceListView, FileWorkspaceListView, CreateWorkspaceView, DeleteWorkspaceView, WorkspaceFileView
+from .views import GetNotesWorkspaceView, FileWorkspaceListView, CreateWorkspaceView, DeleteWorkspaceView, WorkspaceFileView
 from .views import WorkspaceMemberView, UpdateWorkspaceView
+from .views.workspaceMembers import WorkspaceMembersListView, EditWorkspaceMemberView, DeleteWorkspaceMemberView
 
 
 urlpatterns = [
@@ -18,7 +19,7 @@ urlpatterns = [
     path("<int:pk>/members/", MemberListView.as_view(), name="workspace_members_list"),
 
     #Danh sách Notes của Workspace
-    path("<int:pk>/notes/", NoteWorkspaceListView.as_view(), name="workspace_notes_list"),
+    path("<int:pk>/notes/", GetNotesWorkspaceView.as_view(), name="workspace_notes_list"),
 
     #Danh sách Files của note
     path("<int:pk>/files", FileWorkspaceListView.as_view(), name="workspace_files_list"),
@@ -37,5 +38,10 @@ urlpatterns = [
 
     #Chỉnh sửa admin/unadmin + thêm người vào nhóm
     path('members/', WorkspaceMemberView.as_view(), name='workspace_member'),
+
+    # --- URLS MỚI CHO QUẢN LÝ THÀNH VIÊN ---
+    path('<int:pk>/members/', WorkspaceMembersListView.as_view(), name='workspace_members_list'),
+    path('<int:pk>/members/edit/<int:member_id>/', EditWorkspaceMemberView.as_view(), name='edit_workspace_member'),
+    path('<int:pk>/members/delete/<int:member_id>/', DeleteWorkspaceMemberView.as_view(), name='delete_workspace_member'),
 
 ]
