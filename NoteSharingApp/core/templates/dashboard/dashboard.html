@@ -4,75 +4,178 @@
 {% block title %}Dashboard - My Notes{% endblock %}
 
 {% block head %}
-  {{ block.super }}
-  <link rel="stylesheet" href="{% static 'core/css/custom_dashboard.css' %}" />
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'core/css/custom_dashboard.css' %}" />
+    <style>
+        /* Optional: Add some basic styling for pagination if not fully covered by Bootstrap */
+        .pagination {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .page-item.active .page-link {
+            z-index: 3;
+            color: #fff;
+            background-color: #4a90e2; /* Primary color */
+            border-color: #4a90e2; /* Primary color */
+        }
+        .page-link {
+            color: #4a90e2; /* Primary color for links */
+        }
+        .page-link:hover {
+            color: #3a7bd5; /* Darker primary color on hover */
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
 <div class="container dashboard-container">
-  <h1 class="dashboard-title">Welcome to My Notes!</h1>
+    <h1 class="dashboard-title">Welcome to My Notes!</h1>
 
-  <!-- My Notes -->
-  <div class="notes-section my-notes-section">
-    <h2 class="section-title"><i class="fas fa-sticky-note"></i> My Notes</h2>
-    <div class="note-grid">
-      {% if notes %}
-        {% for note in notes %}
-          <div class="note-card">
-            <h3 class="note-card-title">{{ note.title }}</h3>
-            <p class="note-card-content">{{ note.content|truncatechars:200 }}</p>
-            <div class="note-card-meta">
-              <span>Created by: {{ note.create_by.username }}</span>
-              <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
-              <span>Last updated: {{ note.updated_at|date:"F j, Y H:i" }}</span>
-            </div>
-            <div class="note-card-actions">
-              <a href="{% url 'edit_note' note.id %}" class="btn btn-sm btn-info">
-                <i class="fas fa-edit"></i> Sửa
-              </a>
-              <a href="{% url 'delete_note' note.id %}" class="btn btn-sm btn-danger">
-                <i class="fas fa-trash-alt"></i> Xóa
-              </a>
-              <a href="{% url 'share_note' note.id %}" class="btn btn-sm btn-success">
-                <i class="fas fa-share-alt"></i> Chia sẻ
-              </a>
-            </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        <p class="no-notes-message">
-          <a href="{% url 'create_note' %}">You don't have any notes yet. Start by adding a new one!</a>
-        </p>
-      {% endif %}
-    </div>
-  </div>
+    <div class="notes-section my-notes-section">
+        <h2 class="section-title"><i class="fas fa-sticky-note"></i> My Notes</h2>
+        <div class="note-grid">
+            {% if notes %} {# 'notes' is now my_notes_page_obj from the view #}
+                {% for note in notes %}
+                    <div class="note-card">
+                        <a href="{% url 'view_note' note.id %}" class="note-card-link">
+                            <h3 class="note-card-title">{{ note.title }}</h3>
+                            <p class="note-card-content">{{ note.content|truncatechars:200 }}</p>
+                            <div class="note-card-meta">
+                                <span>Created by: {{ note.create_by.username }}</span>
+                                <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
+                                <span>Last updated: {{ note.updated_at|date:"F j, Y H:i" }}</span>
+                            </div>
+                        </a>
+                        <div class="note-card-actions">
+                            <a href="{% url 'edit_note' note.id %}" class="btn btn-sm btn-info">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'delete_note' note.id %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                            <a href="{% url 'share_note' note.id %}" class="btn btn-sm btn-success">
+                                <i class="fas fa-share-alt"></i> Share
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-notes-message">
+                    <a href="{% url 'create_note' %}">You don't have any notes yet. Start by adding a new one!</a>
+                </p>
+            {% endif %}
+        </div>
 
-  <!-- Shared Notes -->
-  <div class="notes-section shared-notes-section mt-5">
-    <h2 class="section-title"><i class="fas fa-share-alt"></i> Notes Shared with Me</h2>
-    <div class="note-grid">
-      {% if shared_notes %}
-        {% for shared in shared_notes %}
-          <div class="note-card shared-note-card">
-            <h3 class="note-card-title">{{ shared.note.title }}</h3>
-            <p class="note-card-content">{{ shared.note.content|truncatechars:200 }}</p>
-            <div class="note-card-meta">
-              <span>Shared by: {{ shared.share_by.username }}</span>
-              <span>Created at: {{ shared.note.created_at|date:"F j, Y H:i" }}</span>
-              <span>Last updated: {{ shared.note.updated_at|date:"F j, Y H:i" }}</span>
-            </div>
-            <div class="note-card-actions">
-              <a href="{% url 'view_note' shared.note.id %}" class="btn btn-sm btn-primary">
-                <i class="fas fa-eye"></i> Xem
-              </a>
-            </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        <p class="no-notes-message">No notes have been shared with you yet.</p>
-      {% endif %}
+        {# Pagination controls for My Notes #}
+        {% if notes.has_other_pages %}
+            <nav aria-label="My Notes pagination">
+                <ul class="pagination justify-content-center mt-4">
+                    {% if notes.has_previous %}
+                        <li class="page-item">
+                            {# Preserve shared_page parameter if it exists #}
+                            <a class="page-link" href="?my_page={{ notes.previous_page_number }}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for i in notes.paginator.page_range %}
+                        {% if notes.number == i %}
+                            <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?my_page={{ i }}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if notes.has_next %}
+                        <li class="page-item">
+                            {# Preserve shared_page parameter if it exists #}
+                            <a class="page-link" href="?my_page={{ notes.next_page_number }}{% if shared_notes.number %}&shared_page={{ shared_notes.number }}{% endif %}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
     </div>
-  </div>
+
+    <div class="notes-section shared-notes-section mt-5">
+        <h2 class="section-title"><i class="fas fa-share-alt"></i> Notes shared with me</h2>
+        <div class="note-grid">
+            {% if shared_notes %} {# 'shared_notes' is now shared_notes_page_obj from the view #}
+                {% for shared in shared_notes %}
+                    <div class="note-card shared-note-card">
+                        <a href="{% url 'view_note' shared.note.id %}" class="note-card-link">
+                            <h3 class="note-card-title">{{ shared.note.title }}</h3>
+                            <p class="note-card-content">{{ shared.note.content|truncatechars:200 }}</p>
+                            <div class="note-card-meta">
+                                <span>Shared by: {{ shared.share_by.username }}</span>
+                                <span>Created at: {{ shared.note.created_at|date:"F j, Y H:i" }}</span>
+                                <span>Last updated: {{ shared.note.updated_at|date:"F j, Y H:i" }}</span>
+                            </div>
+                        </a>
+                        <div class="note-card-actions">
+                            <a href="{% url 'view_note' shared.note.id %}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-notes-message">No notes have been shared with you.</p>
+            {% endif %}
+        </div>
+
+        {# Pagination controls for Shared Notes #}
+        {% if shared_notes.has_other_pages %}
+            <nav aria-label="Shared Notes pagination">
+                <ul class="pagination justify-content-center mt-4">
+                    {% if shared_notes.has_previous %}
+                        <li class="page-item">
+                            {# Preserve my_page parameter if it exists #}
+                            <a class="page-link" href="?shared_page={{ shared_notes.previous_page_number }}{% if notes.number %}&my_page={{ notes.number }}{% endif %}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for i in shared_notes.paginator.page_range %}
+                        {% if shared_notes.number == i %}
+                            <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?shared_page={{ i }}{% if notes.number %}&my_page={{ notes.number }}{% endif %}">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if shared_notes.has_next %}
+                        <li class="page-item">
+                            {# Preserve my_page parameter if it exists #}
+                            <a class="page-link" href="?shared_page={{ shared_notes.next_page_number }}{% if notes.number %}&my_page={{ notes.number }}{% endif %}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
 

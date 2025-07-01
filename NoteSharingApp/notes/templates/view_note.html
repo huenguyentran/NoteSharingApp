@@ -1,75 +1,210 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Note</title>
-    <script
-      src="https://cdn.tiny.cloud/1/xfe1ajckr5bngkcosxjwq0flmm0xzo9aufq6ffi6okktajdj/tinymce/7/tinymce.min.js"
-      referrerpolicy="origin"
-    ></script>
-    <script>
-      tinymce.init({
-        selector: "textarea",
-        plugins: [
-          // Core editing features
-          "anchor",
-          "autolink",
-          "charmap",
-          "codesample",
-          "emoticons",
-          "image",
-          "link",
-          "lists",
-          "media",
-          "searchreplace",
-          "table",
-          "visualblocks",
-          "wordcount",
-          // Your account includes a free trial of TinyMCE premium features
-          // Try the most popular premium features until Jun 9, 2025:
-          "checklist",
-          "mediaembed",
-          "casechange",
-          "formatpainter",
-          "pageembed",
-          "a11ychecker",
-          "tinymcespellchecker",
-          "permanentpen",
-          "powerpaste",
-          "advtable",
-          "advcode",
-          "editimage",
-          "advtemplate",
-          "ai",
-          "mentions",
-          "tinycomments",
-          "tableofcontents",
-          "footnotes",
-          "mergetags",
-          "autocorrect",
-          "typography",
-          "inlinecss",
-          "markdown",
-          "importword",
-          "exportword",
-          "exportpdf",
-        ],
-        toolbar:
-          "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-        tinycomments_mode: "embedded",
-        tinycomments_author: "Author name",
-        mergetags_list: [
-          { value: "First.Name", title: "First Name" },
-          { value: "Email", title: "Email" },
-        ],
-        ai_request: (request, respondWith) =>
-          respondWith.string(() =>
-            Promise.reject("See docs to implement AI Assistant")
-          ),
-      });
-    </script>
-  </head>
-  <body>
-    <h1>View Note</h1>
-    <form novalidate>{% csrf_token %} {{ form.as_p }}</form>
-  </body>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>{{ note.title }} - Xem Ghi Chú</title>
+ <link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+  rel="stylesheet"
+ />
+ <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+ />
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <style>
+  :root {
+   --primary-color: #4a90e2;
+   --secondary-color: #50e3c2;
+   --background-color: #f4f7f6;
+   --card-background: #ffffff;
+   --text-color: #333333;
+   --light-text-color: #666666;
+   --border-color: #e0e0e0;
+   --shadow-color: rgba(0, 0, 0, 0.08);
+  }
+
+  body {
+   font-family: "Poppins", sans-serif;
+   margin: 0;
+   padding: 0;
+   background-color: var(--background-color);
+   color: var(--text-color);
+   line-height: 1.6;
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+   align-items: center;
+   justify-content: center;
+   overflow-x: hidden;
+  }
+
+  .container {
+   max-width: 800px;
+   width: 90%;
+   margin: 40px auto;
+   padding: 30px;
+   background-color: var(--card-background);
+   border-radius: 12px;
+   box-shadow: 0 10px 30px var(--shadow-color);
+   box-sizing: border-box;
+  }
+
+  h1 {
+   color: var(--primary-color);
+   text-align: center;
+   margin-bottom: 30px;
+   font-size: 2em;
+   font-weight: 600;
+  }
+
+  /* Styles for static display of note content */
+  .note-display {
+   margin-bottom: 20px;
+  }
+
+  .note-display label {
+   display: block;
+   margin-bottom: 8px;
+   font-weight: 600;
+   color: var(--text-color);
+  }
+
+  .note-display .display-value {
+   width: 100%;
+   padding: 12px; /* Tăng padding cho dễ nhìn */
+   border: 1px solid transparent; /* Loại bỏ viền */
+   border-radius: 8px;
+   font-family: "Poppins", sans-serif;
+   font-size: 1em;
+   box-sizing: border-box;
+   background-color: #f9f9f9; /* Màu nền nhạt để phân biệt */
+   word-wrap: break-word;
+   min-height: 40px;
+   line-height: 1.6; /* Khoảng cách dòng */
+  }
+
+  .note-display .content-value {
+   min-height: 250px;
+   white-space: pre-wrap; /* Hiển thị xuống dòng và khoảng trắng */
+  }
+
+  /* Thông tin meta */
+  .note-meta-info {
+   font-size: 0.9em;
+   color: var(--light-text-color);
+   margin-top: 25px;
+   text-align: right;
+   border-top: 1px solid var(--border-color);
+   padding-top: 15px;
+  }
+  .note-meta-info p {
+   margin-bottom: 5px;
+  }
+
+  /* Các nút hành động */
+  .form-actions {
+   display: flex;
+   justify-content: flex-end;
+   gap: 15px;
+   margin-top: 30px;
+  }
+
+  .button {
+   display: inline-block;
+   padding: 12px 25px;
+   border: none;
+   border-radius: 8px;
+   font-weight: 600;
+   font-size: 1em;
+   cursor: pointer;
+   transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.3s ease;
+   text-decoration: none;
+   text-align: center;
+  }
+
+  .button-primary {
+   background-color: var(--primary-color);
+   color: white;
+   box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+  }
+
+  .button-primary:hover {
+   background-color: #3a7bd5;
+   transform: translateY(-2px);
+   box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+  }
+
+  .button-secondary {
+   background-color: #e0e0e0;
+   color: var(--text-color);
+  }
+
+  .button-secondary:hover {
+   background-color: #d0d0d0;
+   transform: translateY(-2px);
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+   .container {
+    margin: 20px auto;
+    padding: 20px;
+   }
+   h1 {
+    font-size: 1.6em;
+    margin-bottom: 20px;
+   }
+   .form-actions {
+    flex-direction: column;
+    gap: 10px;
+   }
+   .button {
+    width: 100%;
+   }
+  }
+ </style>
+</head>
+<body>
+ <div class="container">
+  <h1>Xem Ghi Chú</h1>
+
+  <div class="note-display">
+   <label>Tiêu đề:</label>
+   <div class="display-value">{{ note.title }}</div>
+  </div>
+
+  <div class="note-display">
+   <label>Nội dung:</label>
+   <div class="display-value content-value">
+    {{ note.content|safe }}
+   </div>
+  </div>
+
+  <div class="note-meta-info">
+   <p><strong>Tạo bởi:</strong> {{ note.create_by.username }}</p>
+   <p><strong>Tạo lúc:</strong> {{ note.created_at|date:"F j, Y H:i" }}</p>
+   <p><strong>Cập nhật cuối:</strong> {{ note.updated_at|date:"F j, Y H:i" }}</p>
+  </div>
+
+  <div class="form-actions">
+   <a href="{% url 'edit_note' note.id %}" class="button button-primary">
+    <i class="fas fa-edit"></i> Sửa Ghi Chú
+   </a>
+   <a href="{% url 'dashboard' %}" class="button button-secondary">
+    <i class="fas fa-arrow-left"></i> Quay lại Dashboard
+   </a>
+   <a href="{% url 'share_note' note.id %}" class="button button-primary">
+    <i class="fas fa-share-alt"></i> Chia sẻ
+   </a>
+   <a href="{% url 'delete_note' note.id %}" class="button button-secondary">
+    <i class="fas fa-trash-alt"></i> Xóa
+   </a>
+  </div>
+ </div>
+</body>
 </html>

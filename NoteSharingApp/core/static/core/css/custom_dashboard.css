@@ -50,11 +50,10 @@ body {
     background-color: #fefefe;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Để nội dung và actions xếp dọc */
 }
 
 .note-card:hover {
@@ -62,39 +61,66 @@ body {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-.note-card-title {
-    font-size: 1.4rem;
-    color: #007bff;
-    margin-bottom: 10px;
-    word-wrap: break-word;
+/* ---------------------------------------------------- */
+/* CÁC QUY TẮC CHO THẺ LIÊN KẾT BÊN TRONG NOTE-CARD */
+/* ---------------------------------------------------- */
+
+.note-card-link { /* Đặt các quy tắc chung cho thẻ <a> bọc nội dung */
+    text-decoration: none !important; /* Loại bỏ gạch chân cho link và tất cả nội dung bên trong */
+    color: inherit; /* Kế thừa màu văn bản từ cha (note-card) */
+    display: block; /* Làm cho toàn bộ khu vực link có thể nhấp */
+    padding: 20px; /* Thêm padding vào đây để toàn bộ vùng nội dung có thể click */
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+    flex-grow: 1; /* Để link chiếm hết không gian có thể trong flex container */
 }
 
-.note-card-content {
+.note-card-link:hover { /* Hiệu ứng hover cho toàn bộ vùng click của link */
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.note-card-link .note-card-title { /* Quy tắc cụ thể cho tiêu đề bên trong link */
+    font-size: 1.4rem;
+    color: #007bff !important; /* Đảm bảo màu xanh cho tiêu đề */
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    text-decoration: none !important; /* Đảm bảo không gạch chân */
+}
+
+.note-card-link .note-card-content { /* Quy tắc cụ thể cho nội dung bên trong link */
     font-size: 0.95rem;
-    color: #555;
+    color: #555 !important; /* Đảm bảo màu xám cho nội dung */
     margin-bottom: 15px;
     line-height: 1.6;
     flex-grow: 1;
     max-height: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-decoration: none !important; /* Đảm bảo không gạch chân */
 }
 
-.note-card-meta {
+.note-card-link .note-card-meta { /* Quy tắc cụ thể cho meta info bên trong link */
     font-size: 0.8rem;
-    color: #777;
+    color: #777 !important; /* Đảm bảo màu xám cho meta */
     border-top: 1px solid #f0f0f0;
     padding-top: 10px;
     margin-top: 15px;
+    text-decoration: none !important; /* Đảm bảo không gạch chân */
 }
 
-.note-card-meta span {
+.note-card-link .note-card-meta span { /* Quy tắc cụ thể cho từng span trong meta info */
     display: block;
     margin-bottom: 3px;
+    text-decoration: none !important; /* Đảm bảo không gạch chân */
 }
 
+
+/* ---------------------------------------------------- */
+/* CÁC QUY TẮC CHO HÀNH ĐỘNG (ACTIONS) */
+/* ---------------------------------------------------- */
 .note-card-actions {
     margin-top: 15px;
+    padding: 0 20px 20px 20px; /* Padding cho vùng buttons */
     display: flex;
     gap: 10px;
     justify-content: flex-end;
@@ -104,13 +130,17 @@ body {
     font-size: 0.9rem;
     padding: 8px 15px;
     border-radius: 5px;
+    text-decoration: none; /* Đảm bảo các nút không bị gạch chân */
 }
 
 .note-card-actions .btn i {
     margin-right: 5px;
 }
 
-/* Chỉ phân biệt shared-note bằng viền trái */
+/* ---------------------------------------------------- */
+/* CÁC QUY TẮC KHÁC */
+/* ---------------------------------------------------- */
+
 .shared-note-card {
     border-left: 5px solid #28a745;
 }
