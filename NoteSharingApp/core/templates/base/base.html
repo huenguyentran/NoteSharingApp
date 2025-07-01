@@ -1,25 +1,18 @@
 <!DOCTYPE html>
-<html lang="en"> {# Changed language to English #}
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}My Notes App{% endblock %}</title>
     
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-      crossorigin="anonymous"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous" />
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    {% load static %} {# Ensure static files are loaded here #}
+    {% load static %}
     
     <style>
-        /* Custom CSS for user widget */
         .user-display {
             background-color: #e9ecef;
             padding: 5px 15px;
@@ -30,7 +23,6 @@
         .user-display i {
             color: #007bff;
         }
-        /* CSS for Django messages */
         .alert-dismissible .btn-close {
             position: absolute;
             top: 0;
@@ -38,49 +30,36 @@
             padding: 0.75rem 1.25rem;
             color: inherit;
         }
-        /* Optional: Add some padding to the main content area */
         main.container {
-            padding-bottom: 70px; /* Adjust as needed for footer */
+            padding-bottom: 70px;
         }
     </style>
 
-    {% block head %}{% endblock %} {# Block for page-specific CSS/JS #}
+    {% block head %}{% endblock %}
   </head>
 
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        {# Changed to 'dashboard' as the main page #}
         <a class="navbar-brand" href="{% url 'dashboard' %}">My Notes</a> 
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            {# Conditional navigation items based on login status #}
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    {# Use request.resolver_match.url_name for active class #}
                     <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'create_note' %}active{% endif %}" href="{% url 'create_note' %}">Create New Note</a>
                 </li>
-                {# Link to workspace_main if needed - Kept your comment block #}
-                {% comment %}
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'workspace_main' %}">Workspace</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'workspace_main' %}active{% endif %}" href="{% url 'workspace_main' %}">
+                        <i class="fas fa-folder-open"></i> My Workspaces
+                    </a>
                 </li>
-                {% endcomment %}
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
@@ -91,46 +70,31 @@
             {% endif %}
           </ul>
           
-          {# User profile widget and Account dropdown #}
           {% if user.is_authenticated %}
-            {# User profile widget #}
-            <div id="userProfileWidget" class="auth-section d-flex align-items-center ms-auto"> {# Changed ms-3 to ms-auto to push to right #}
-              <div class="user-display d-flex align-items-center me-3"> {# Add me-3 for spacing before dropdown #}
+            <div id="userProfileWidget" class="auth-section d-flex align-items-center ms-auto">
+              <div class="user-display d-flex align-items-center me-3">
                 <i class="fa-solid fa-user-circle me-2"></i>
                 <span class="fw-bold">Welcome, {{ user.username }}!</span>
               </div>
               
-              {# Account Dropdown #}
-              <ul class="navbar-nav"> {# Wrap dropdown in ul.navbar-nav for proper alignment #}
+              <ul class="navbar-nav">
                 <li class="nav-item dropdown">
-                  <a
-                    class="nav-link dropdown-toggle"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Account
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-end"> {# Added dropdown-menu-end to align right #}
-                    <li><a class="dropdown-item" href="{% url 'account_settings' %}">Settings</a></li> {# Updated URL for Settings #}
-                    {# Removed only Help link as per request #}
-                    {# <li><a class="dropdown-item" href="#">Help</a></li> #}
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'account_settings' %}">Settings</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li>
-                      <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                    </li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                   </ul>
                 </li>
               </ul>
             </div>
-          {% endif %} {# End if user.is_authenticated for user widget and dropdown #}
-
+          {% endif %}
         </div>
       </div>
     </nav>
 
-    {# Django messages block #}
     <div class="container mt-4">
         {% if messages %}
             {% for message in messages %}
@@ -142,19 +106,15 @@
         {% endif %}
     </div>
 
+    <main class="container mt-4">
+      {% block content %} {% endblock %}
+    </main>
 
-    <main class="container mt-4">{% block content %} {% endblock %}</main>
-
-    {# Footer #}
     <footer class="mt-5 py-3 bg-light text-center text-muted">
         &copy; SE332.P22
     </footer>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
     
     {% block script %}{% endblock %}
   </body>

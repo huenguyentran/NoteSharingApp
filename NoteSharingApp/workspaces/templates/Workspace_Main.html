@@ -1,25 +1,67 @@
 {% extends "base/base.html" %}
-{%load static%}
+{% load static %}
 
-{% block title %}Quản lý Workspace{%endblock %}
+{% block title %}My Workspaces{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}" />
-<link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
-    rel="stylesheet"
-/>
+    {{ block.super }}
+    <style>
+        .workspace-section {
+            margin-top: 40px;
+        }
+
+        .workspace-section h2 {
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .workspace-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s ease-in-out;
+        }
+
+        .workspace-card:hover {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .workspace-title {
+            font-weight: 500;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .workspace-actions .btn {
+            padding: 5px 15px;
+            font-size: 0.9rem;
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+    </style>
 {% endblock %}
 
-
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Danh sách Workspace</h2>
-    <a href="{% url 'create_workspace' %}" class="btn btn-primary">Tạo Workspace mới</a>
-</div>
+<div class="container workspace-section">
+    <div class="workspace-header">
+        <h2><i class="fas fa-folder-open me-2"></i> My Workspaces</h2>
+        <a href="{% url 'create_workspace' %}" class="btn btn-primary">Create New Workspace</a>
+    </div>
 
-<div id="workspace-container" data-url="{% url 'workspace_list' %}">
-    <p>Đang tải danh sách workspace...</p>
+    <div id="workspace-container" data-url="{% url 'workspace_list' %}">
+        <p>Loading workspace list...</p>
+    </div>
 </div>
 {% endblock %}
 
