@@ -36,6 +36,12 @@ class WorkspaceMember(models.Model):
         related_name='workspace_memberships'
     )
 
+    permission = models.CharField(
+        max_length=10,
+        choices=[('view', 'View'), ('edit', 'Edit')],
+        default='view'
+    )
+
     isAdmin = models.BooleanField(default=False)
     joined_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

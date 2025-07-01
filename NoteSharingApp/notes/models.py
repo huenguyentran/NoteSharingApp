@@ -90,7 +90,7 @@ class NoteShare(models.Model):
         related_name='share_receiver'
     )
     permission = models.CharField(
-        max_length=10, # Giảm max_length xuống 10
+        max_length=10, 
         choices=[('view', 'View'), ('edit', 'Edit')],
         default='view'
     )
