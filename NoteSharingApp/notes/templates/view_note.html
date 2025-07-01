@@ -1,219 +1,675 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>{{ note.title }} - Xem Ghi Chú</title>
- <link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
-  rel="stylesheet"
- />
- <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
- />
- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
- <style>
-  :root {
-   --primary-color: #4a90e2;
-   --secondary-color: #50e3c2;
-   --background-color: #f4f7f6;
-   --card-background: #ffffff;
-   --text-color: #333333;
-   --light-text-color: #666666;
-   --border-color: #e0e0e0;
-   --shadow-color: rgba(0, 0, 0, 0.08);
-  }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ note.title }} - Xem Ghi Chú</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet"
+    />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50e3c2;
+            --background-color: #f4f7f6;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --light-text-color: #666666;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --danger-color: #dc3545; /* Thêm màu đỏ cho nút xóa */
+        }
 
-  body {
-   font-family: "Poppins", sans-serif;
-   margin: 0;
-   padding: 0;
-   background-color: var(--background-color);
-   color: var(--text-color);
-   line-height: 1.6;
-   display: flex;
-   flex-direction: column;
-   min-height: 100vh;
-   align-items: center;
-   justify-content: center;
-   overflow-x: hidden;
-  }
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
 
-  .container {
-   max-width: 800px;
-   width: 90%;
-   margin: 40px auto;
-   padding: 30px;
-   background-color: var(--card-background);
-   border-radius: 12px;
-   box-shadow: 0 10px 30px var(--shadow-color);
-   box-sizing: border-box;
-  }
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            box-sizing: border-box;
+        }
 
-  h1 {
-   color: var(--primary-color);
-   text-align: center;
-   margin-bottom: 30px;
-   font-size: 2em;
-   font-weight: 600;
-  }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            font-weight: 600;
+        }
 
-  /* Styles for static display of note content */
-  .note-display {
-   margin-bottom: 20px;
-  }
+        /* Styles for static display of note content */
+        .note-display {
+            margin-bottom: 20px;
+        }
 
-  .note-display label {
-   display: block;
-   margin-bottom: 8px;
-   font-weight: 600;
-   color: var(--text-color);
-  }
+        .note-display label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
 
-  .note-display .display-value {
-   width: 100%;
-   padding: 12px;
-   border: 1px solid transparent;
-   border-radius: 8px;
-   font-family: "Poppins", sans-serif;
-   font-size: 1em;
-   box-sizing: border-box;
-   background-color: #f9f9f9;
-   word-wrap: break-word;
-   min-height: 40px;
-   line-height: 1.6;
-  }
+        .note-display .display-value {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-family: "Poppins", sans-serif;
+            font-size: 1em;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            word-wrap: break-word;
+            min-height: 40px;
+            line-height: 1.6;
+        }
 
-  .note-display .content-value {
-   min-height: 250px;
-   white-space: pre-wrap;
-  }
+        .note-display .content-value {
+            min-height: 250px;
+            white-space: pre-wrap;
+        }
 
-  /* Thông tin meta */
-  .note-meta-info {
-   font-size: 0.9em;
-   color: var(--light-text-color);
-   margin-top: 25px;
-   text-align: right;
-   border-top: 1px solid var(--border-color);
-   padding-top: 15px;
-  }
-  .note-meta-info p {
-   margin-bottom: 5px;
-  }
+        /* Thông tin meta */
+        .note-meta-info {
+            font-size: 0.9em;
+            color: var(--light-text-color);
+            margin-top: 25px;
+            text-align: right;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+        .note-meta-info p {
+            margin-bottom: 5px;
+        }
 
-  /* Các nút hành động */
-  .form-actions {
-   display: flex;
-   justify-content: flex-end;
-   gap: 15px;
-   margin-top: 30px;
-  }
+        /* Các nút hành động */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap; /* Để các nút xuống dòng trên màn hình nhỏ */
+        }
 
-  .button {
-   display: inline-block;
-   padding: 12px 25px;
-   border: none;
-   border-radius: 8px;
-   font-weight: 600;
-   font-size: 1em;
-   cursor: pointer;
-   transition: background-color 0.3s ease, transform 0.2s ease,
-    box-shadow 0.3s ease;
-   text-decoration: none;
-   text-align: center;
-  }
+        .button {
+            display: inline-flex; /* Sử dụng flex để căn giữa icon và text */
+            align-items: center;
+            justify-content: center;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease,
+            box-shadow 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            gap: 8px; /* Khoảng cách giữa icon và text */
+        }
 
-  .button-primary {
-   background-color: var(--primary-color);
-   color: white;
-   box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
-  }
+        .button-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
 
-  .button-primary:hover {
-   background-color: #3a7bd5;
-   transform: translateY(-2px);
-   box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
-  }
+        .button-primary:hover {
+            background-color: #3a7bd5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+        }
 
-  .button-secondary {
-   background-color: #e0e0e0;
-   color: var(--text-color);
-  }
+        .button-secondary {
+            background-color: #e0e0e0;
+            color: var(--text-color);
+        }
 
-  .button-secondary:hover {
-   background-color: #d0d0d0;
-   transform: translateY(-2px);
-   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+        .button-secondary:hover {
+            background-color: #d0d0d0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-   .container {
-    margin: 20px auto;
-    padding: 20px;
-   }
-   h1 {
-    font-size: 1.6em;
-    margin-bottom: 20px;
-   }
-   .form-actions {
-    flex-direction: column;
-    gap: 10px;
-   }
-   .button {
-    width: 100%;
-   }
-  }
- </style>
+        .button-danger {
+            background-color: var(--danger-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+        }
+
+        .button-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.6em;
+                margin-bottom: 20px;
+            }
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .button {
+                width: 100%;
+            }
+        }
+
+        /* Comments section styles */
+        .comments-section {
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+            /* Ban đầu ẩn đi */
+            display: none;
+        }
+
+        .comments-section h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .comment-form {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background-color: #fcfcfc;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: "Poppins", sans-serif;
+            font-size: 0.95em;
+            min-height: 80px;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .comment-form button {
+            float: right; /* Đẩy nút sang phải */
+            margin-left: 10px; /* Khoảng cách với các nút khác nếu có */
+        }
+
+        .comments-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .comment-item {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comment-user {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+
+        .comment-meta {
+            font-size: 0.85em;
+            color: var(--light-text-color);
+        }
+
+        .comment-content {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .comment-actions {
+            text-align: right;
+        }
+
+        .comment-actions button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+        .comment-actions button:hover {
+            background-color: #eef5fc;
+        }
+
+        .comment-actions .delete-button {
+            color: var(--danger-color);
+        }
+        .comment-actions .delete-button:hover {
+            background-color: #ffe0e0;
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .pagination-button {
+            padding: 10px 20px;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            background-color: var(--card-background);
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .pagination-button:hover:not(:disabled) {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .pagination-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f0f0f0;
+            color: #999;
+            border-color: #ccc;
+        }
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
- <div class="container">
-  <h1>Xem Ghi Chú</h1>
+    <div class="container">
+        <h1>Xem Ghi Chú</h1>
 
-  <div class="note-display">
-   <label>Tiêu đề:</label>
-   <div class="display-value">{{ note.title }}</div>
-  </div>
+        <div class="note-display">
+            <label>Tiêu đề:</label>
+            <div class="display-value">{{ note.title }}</div>
+        </div>
 
-  <div class="note-display">
-   <label>Nội dung:</label>
-   <div class="display-value content-value">
-    {{ note.content|safe }}
-   </div>
-  </div>
+        <div class="note-display">
+            <label>Nội dung:</label>
+            <div class="display-value content-value">
+                {{ note.content|safe }}
+            </div>
+        </div>
 
-  <div class="note-meta-info">
-   <p><strong>Tạo bởi:</strong> {{ note.create_by.username }}</p>
-   <p><strong>Tạo lúc:</strong> {{ note.created_at|date:"F j, Y H:i" }}</p>
-   <p><strong>Cập nhật cuối:</strong> {{ note.updated_at|date:"F j, Y H:i" }}</p>
-  </div>
+        <div class="note-meta-info">
+            <p><strong>Tạo bởi:</strong> {{ note.create_by.username }}</p>
+            <p><strong>Tạo lúc:</strong> {{ note.created_at|date:"F j, Y H:i" }}</p>
+            <p><strong>Cập nhật cuối:</strong> {{ note.updated_at|date:"F j, Y H:i" }}</p>
+        </div>
 
-  <div class="form-actions">
-   {% if permission == 'owner' or permission == 'edit' %}
-    <a href="{% url 'edit_note' note.id %}" class="button button-primary">
-     <i class="fas fa-edit"></i> Sửa Ghi Chú
-    </a>
-   {% endif %}
+        <div class="form-actions">
+            {% if permission == 'owner' or permission == 'edit' %}
+            <a href="{% url 'edit_note' note.id %}" class="button button-primary">
+                <i class="fas fa-edit"></i> Sửa Ghi Chú
+            </a>
+            {% endif %}
 
-   <a href="{% url 'dashboard' %}" class="button button-secondary">
-    <i class="fas fa-arrow-left"></i> Quay lại Dashboard
-   </a>
+            <a href="{% url 'dashboard' %}" class="button button-secondary">
+                <i class="fas fa-arrow-left"></i> Quay lại Dashboard
+            </a>
 
-   {% if is_owner %} {# Chỉ hiển thị nút Chia sẻ nếu là chủ sở hữu của ghi chú #}
-    <a href="{% url 'share_note' note.id %}" class="button button-primary">
-     <i class="fas fa-share-alt"></i> Chia sẻ
-    </a>
-   {% endif %}
+            {% if is_owner %} {# Chỉ hiển thị nút Chia sẻ nếu là chủ sở hữu của ghi chú #}
+            <a href="{% url 'share_note' note.id %}" class="button button-primary">
+                <i class="fas fa-share-alt"></i> Chia sẻ
+            </a>
+            {% endif %}
 
-   {% if is_owner %} {# Nút Xóa cũng chỉ hiển thị cho chủ sở hữu #}
-    <a href="{% url 'delete_note' note.id %}" class="button button-secondary">
-     <i class="fas fa-trash-alt"></i> Xóa
-    </a>
-   {% endif %}
-  </div>
- </div>
+            {% if is_owner %} {# Nút Xóa cũng chỉ hiển thị cho chủ sở hữu #}
+            <a href="{% url 'delete_note' note.id %}" class="button button-danger">
+                <i class="fas fa-trash-alt"></i> Xóa
+            </a>
+            {% endif %}
+
+            <button id="toggle-comments" class="button button-secondary">
+                <i class="fas fa-comments"></i> Xem Bình luận
+            </button>
+        </div>
+
+        <div id="comments-section" class="comments-section">
+            <h2>Bình luận</h2>
+
+            {% if user.is_authenticated %}
+            <div class="comment-form">
+                <textarea id="comment-content" placeholder="Viết bình luận của bạn..."></textarea>
+                <div style="overflow: hidden;">
+                    <button id="submit-comment" class="button button-primary"><i class="fas fa-paper-plane"></i> Gửi Bình luận</button>
+                </div>
+                <div id="comment-error-message" class="error-message"></div>
+            </div>
+            {% else %}
+            <p class="text-center text-muted">Bạn cần <a href="{% url 'login' %}">đăng nhập</a> để bình luận.</p>
+            {% endif %}
+
+            <ul id="comments-list" class="comments-list">
+                </ul>
+
+            <div class="pagination-controls">
+                <button id="prev-page" class="pagination-button" disabled><i class="fas fa-chevron-left"></i> Trang trước</button>
+                <span id="current-page-info" class="text-muted">Trang 1 / 1</span>
+                <button id="next-page" class="pagination-button" disabled>Trang sau <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lấy các phần tử HTML
+        const commentsSection = document.getElementById('comments-section');
+        const toggleCommentsButton = document.getElementById('toggle-comments');
+        const commentsList = document.getElementById('comments-list');
+        const commentContentInput = document.getElementById('comment-content');
+        const submitCommentButton = document.getElementById('submit-comment');
+        const commentErrorMessage = document.getElementById('comment-error-message');
+        const prevPageButton = document.getElementById('prev-page');
+        const nextPageButton = document.getElementById('next-page');
+        const currentPageInfo = document.getElementById('current-page-info');
+
+        // Biến lưu trữ trạng thái phân trang, lấy NOTE_ID và CSRF_TOKEN từ Django context
+        const NOTE_ID = "{{ note.id }}";
+        const CURRENT_USER = "{{ user.username }}";
+        const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}"; // Pass as boolean string
+        const CSRF_TOKEN = "{{ csrf_token }}"; // Pass CSRF token for POST requests
+
+        let currentPage = 1;
+        let totalPages = 1;
+        let commentsLoaded = false; // Biến mới để theo dõi xem comments đã được tải lần đầu chưa
+
+        /**
+         * Hàm để lấy CSRF token.
+         */
+        function getCsrfToken() {
+            return CSRF_TOKEN;
+        }
+
+        /**
+         * Hiển thị thông báo lỗi.
+         * @param {string} message - Nội dung thông báo lỗi.
+         */
+        function displayError(message) {
+            commentErrorMessage.textContent = message;
+            commentErrorMessage.style.display = 'block';
+        }
+
+        /**
+         * Xóa thông báo lỗi.
+         */
+        function clearError() {
+            commentErrorMessage.textContent = '';
+            commentErrorMessage.style.display = 'none';
+        }
+
+        /**
+         * Hàm format thời gian hiển thị.
+         * @param {string} isoString - Chuỗi thời gian ISO từ server (ví dụ: "2024-07-02T10:30:00Z").
+         * @returns {string} Chuỗi thời gian đã format.
+         */
+        function formatDateTime(isoString) {
+            const date = new Date(isoString);
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false // 24-hour format
+            };
+            // Đặt múi giờ nếu server và client khác múi giờ
+            // options.timeZone = 'Asia/Ho_Chi_Minh'; // Ví dụ: múi giờ Việt Nam
+            return date.toLocaleDateString('vi-VN', options) + ' ' + date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+        }
+
+
+        /**
+         * Tải danh sách comments cho note hiện tại.
+         * @param {number} page - Số trang comments muốn tải.
+         */
+        async function fetchComments(page) {
+            clearError();
+            if (!NOTE_ID) {
+                console.error("NOTE_ID is not defined. Cannot load comments.");
+                displayError("Lỗi: Không thể tải bình luận. ID ghi chú không xác định.");
+                return;
+            }
+            try {
+                const response = await fetch(`/api/comments/note/${NOTE_ID}/?page=${page}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                renderComments(data);
+                commentsLoaded = true; // Đánh dấu là comments đã được tải ít nhất một lần
+                console.log('Comments data:', data);
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+                displayError('Không thể tải bình luận. Vui lòng thử lại.');
+            }
+        }
+
+        /**
+         * Render danh sách comments lên giao diện.
+         * @param {Object} data - Dữ liệu comments từ API (bao gồm comments, current_page, total_pages...).
+         */
+        function renderComments(data) {
+            commentsList.innerHTML = ''; // Xóa comments cũ
+            if (data.comments && data.comments.length > 0) {
+                data.comments.forEach(comment => {
+                    const li = document.createElement('li');
+                    li.className = 'comment-item';
+                    li.setAttribute('data-comment-id', comment.id); // Lưu ID comment
+                    li.innerHTML = `
+                        <div class="comment-header">
+                            <span class="comment-user">${comment.user}</span>
+                            <span class="comment-meta">${formatDateTime(comment.created_at)}</span>
+                        </div>
+                        <div class="comment-content">${comment.content}</div>
+                        <div class="comment-actions">
+                            ${comment.user === CURRENT_USER && IS_AUTHENTICATED === 'true' ? `
+                            <button class="delete-button" data-comment-id="${comment.id}"><i class="fas fa-trash-alt"></i> Xóa</button>
+                            ` : ''}
+                        </div>
+                    `;
+                    commentsList.appendChild(li);
+                });
+                attachDeleteEventListeners(); // Gắn lại sự kiện xóa cho các nút mới
+            } else {
+                commentsList.innerHTML = '<li class="text-center text-muted">Chưa có bình luận nào.</li>';
+            }
+
+            // Cập nhật thông tin phân trang
+            currentPage = data.current_page;
+            totalPages = data.total_pages;
+            currentPageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
+
+            prevPageButton.disabled = !data.has_previous;
+            nextPageButton.disabled = !data.has_next;
+        }
+
+        /**
+         * Gửi comment mới đến server.
+         */
+        async function postComment() {
+            clearError();
+            const content = commentContentInput.value.trim();
+
+            if (!content) {
+                displayError('Nội dung bình luận không được để trống.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/comments/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken(), // Sử dụng CSRF token
+                    },
+                    body: JSON.stringify({
+                        note_id: NOTE_ID,
+                        content: content
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    commentContentInput.value = ''; // Xóa nội dung input
+                    // Tải lại trang đầu tiên để thấy comment mới
+                    currentPage = 1; // Reset về trang 1 sau khi gửi comment
+                    await fetchComments(currentPage);
+                    console.log('Comment created:', data);
+                } else {
+                    displayError(data.error || 'Gửi bình luận thất bại. Vui lòng thử lại.');
+                    console.error('Error creating comment:', data);
+                }
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+                displayError('Đã xảy ra lỗi khi gửi bình luận. Vui lòng thử lại.');
+            }
+        }
+
+        /**
+         * Xóa comment.
+         * @param {number} commentId - ID của comment cần xóa.
+         */
+        async function deleteComment(commentId) {
+            if (!confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+                return;
+            }
+            clearError();
+            try {
+                const response = await fetch(`/api/comments/${commentId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': getCsrfToken(), // Sử dụng CSRF token
+                    },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('Comment deleted:', data.message);
+                    // Tải lại comments của trang hiện tại sau khi xóa
+                    await fetchComments(currentPage);
+                } else {
+                    displayError(data.error || 'Xóa bình luận thất bại. Vui lòng thử lại.');
+                    console.error('Error deleting comment:', data);
+                }
+            } catch (error) {
+                console.error('Error deleting comment:', error);
+                displayError('Đã xảy ra lỗi khi xóa bình luận. Vui lòng thử lại.');
+            }
+        }
+
+        /**
+         * Gắn sự kiện click cho các nút xóa comment.
+         */
+        function attachDeleteEventListeners() {
+            document.querySelectorAll('.comment-actions .delete-button').forEach(button => {
+                button.onclick = (event) => {
+                    // Lấy commentId từ dataset của nút hoặc phần tử cha gần nhất
+                    const commentId = event.target.dataset.commentId || event.target.closest('button').dataset.commentId;
+                    if (commentId) {
+                        deleteComment(commentId);
+                    }
+                };
+            });
+        }
+
+        // Event Listener cho nút ẩn/hiện bình luận
+        toggleCommentsButton.addEventListener('click', () => {
+            if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+                commentsSection.style.display = 'block';
+                toggleCommentsButton.innerHTML = '<i class="fas fa-comments"></i> Ẩn Bình luận';
+                // Nếu comments chưa được tải lần nào, thì tải chúng
+                if (!commentsLoaded) {
+                    fetchComments(currentPage);
+                }
+            } else {
+                commentsSection.style.display = 'none';
+                toggleCommentsButton.innerHTML = '<i class="fas fa-comments"></i> Xem Bình luận';
+            }
+        });
+
+        // Event Listeners cho các nút bình luận (chỉ khi người dùng đã đăng nhập)
+        if (IS_AUTHENTICATED === 'true') {
+            submitCommentButton.addEventListener('click', postComment);
+        }
+
+        prevPageButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                fetchComments(currentPage - 1);
+            }
+        });
+
+        nextPageButton.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                fetchComments(currentPage + 1);
+            }
+        });
+
+        // Không tự động tải comments khi DOMContentLoaded nữa,
+        // việc này sẽ do nút "toggle-comments" kích hoạt lần đầu.
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     if (NOTE_ID) {
+        //         fetchComments(currentPage);
+        //     } else {
+        //         console.error("NOTE_ID is not defined. Cannot load comments.");
+        //     }
+        // });
+    </script>
 </body>
 </html>
