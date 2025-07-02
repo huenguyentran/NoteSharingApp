@@ -39,10 +39,10 @@
         <div>
             <a href="{% url 'update_workspace' workspace.pk %}" class="btn btn-warning">Sửa</a>
             <button type="button" class="btn btn-danger delete-workspace-btn"
-                    data-delete-url="{% url 'delete_workspace' %}"
-                    data-workspace-pk="{{ workspace.pk }}">
-                Xóa
-            </button>
+        data-delete-url="{% url 'delete_workspace' workspace.pk %}"
+        data-workspace-pk="{{ workspace.pk }}">
+    Xóa
+</button>
             <a href="{% url 'workspace_members_list' workspace.pk %}" class="btn btn-secondary">Thành viên</a>
         </div>
     </div>
@@ -67,7 +67,7 @@
                     <li class="list-group-item">Chưa có thành viên nào (ngoại trừ bạn).</li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'workspace_member' %}" class="btn btn-outline-primary btn-sm mt-3">Thêm/Quản lý thành viên</a>
+            <a href="{% url 'workspace_members_list' workspace.pk %}" class="btn btn-outline-primary btn-sm mt-3">Thêm/Quản lý thành viên</a>
         </div>
     </div>
 

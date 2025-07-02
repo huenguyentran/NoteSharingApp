@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!box) return;
 
     const li = document.createElement("li");
-    li.classList.add(type); 
+    li.classList.add(type);
     li.textContent = message;
-    box.innerHTML = ""; // xóa thông báo cũ
+    box.innerHTML = ""; // Clear old messages
     box.appendChild(li);
 
     setTimeout(() => {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     password.addEventListener('keyup', (e) => {
       const passwordValue = e.target.value;
       password.classList.remove('is-invalid');
-      passwordFeedbackArea.classList.remove('show'); 
+      passwordFeedbackArea.classList.remove('show');
 
       if (passwordValue.length > 0) {
         fetch("/auth/password-validation/", {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
           .then((data) => {
             if (data.password_error) {
               password.classList.add('is-invalid');
-              passwordFeedbackArea.classList.add('show'); 
+              passwordFeedbackArea.classList.add('show');
               passwordFeedbackArea.innerHTML = `<p>${data.password_error}</p>`;
             }
           });
@@ -112,15 +112,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.validation_error) {
           showMessage("error", data.validation_error);
         } else  {
-          showMessage("success", "Đăng ký thành công!");
-          registration_form.submit(); 
+          showMessage("success", "Registration successful!");
+          registration_form.submit();
         }
       });
     }
     else{
-      showMessage("error", 'Tên đăng nhập hoặc mật khẩu không hợp lệ');
+      showMessage("error", 'Invalid username or password');
     }
-    
+
   });
 
 

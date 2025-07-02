@@ -25,25 +25,28 @@ class deleteNoteView(BaseNoteAccessView):
 
     # === Cập nhật phương thức post ===
     def post(self, request, note_id):
-        # self.note đã được gán bởi BaseNoteAccessView.dispatch sau khi gọi get_note
-        # Kiểm tra xem ghi chú đã bị xóa mềm chưa để tránh xóa nhiều lần (tùy chọn)
         if self.note.deleted_at:
-            # Trả về lỗi 400 Bad Request nếu ghi chú đã bị xóa
-            return JsonResponse({'success': False, 'error': 'Ghi chú này đã bị xóa rồi.'}, status=400)
+            # Nếu ghi chú đã bị xóa, chuyển hướng về dashboard hoặc trang thông báo lỗi
+            # Thay vì JsonResponse vì đây là POST từ form
+            messages.error(request, 'Ghi chú này đã bị xóa rồi.')
+            return redirect(reverse('dashboard')) # Chuyển hướng về dashboard
 
         try:
             self.note.deleted_at = timezone.now()
             self.note.save()
-            # Trả về phản hồi thành công
-            return JsonResponse({'success': True, 'message': 'Ghi chú đã được xóa thành công.'})
-        except Exception as e:
-            # Xử lý lỗi khi lưu
-            print(f"Lỗi khi xóa ghi chú: {e}") # In ra console để debug
-            return JsonResponse({'success': False, 'error': f'Lỗi khi xóa ghi chú: {e}'}, status=500)
+            # Thêm thông báo thành công (tùy chọn)
+            from django.contrib import messages
+            messages.success(request, 'Ghi chú đã được xóa thành công.')
+            # CHUYỂN HƯỚNG SAU KHI XÓA THÀNH CÔNG
+            return redirect(reverse('dashboard')) # Hoặc 'note_list' tùy ý bạn
 
-    # === TÙY CHỌN: Thêm phương thức get để xử lý trường hợp truy cập trực tiếp bằng GET ===
-    # Điều này sẽ ngăn lỗi Not Implemented Error nếu ai đó cố gắng truy cập URL xóa trực tiếp
-    # bằng cách gõ vào trình duyệt hoặc click vào một thẻ <a> cũ.
+        except Exception as e:
+            print(f"Lỗi khi xóa ghi chú: {e}")
+            # Thêm thông báo lỗi
+            from django.contrib import messages
+            messages.error(request, f'Lỗi khi xóa ghi chú: {e}')
+            # Chuyển hướng về trang trước đó hoặc dashboard
+            return redirect(request.META.get('HTTP_REFERER', reverse('dashboard')))
     def get(self, request, note_id):
         # Trong trường hợp này, nếu ai đó cố gắng truy cập URL /notes/delete/<note_id>/ bằng GET
         # chúng ta sẽ chuyển hướng họ về trang chi tiết workspace của ghi chú đó.

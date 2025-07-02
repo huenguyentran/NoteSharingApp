@@ -1,0 +1,18 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Create New Workspace{% endblock %}
+
+{% block content %}
+<div class="container dashboard-container">
+    <h1 class="dashboard-title">Create New Workspace</h1>
+    <div class="card p-4 shadow-sm">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mt-3">Create Workspace</button>
+            <a href="{% url 'workspace_list' %}" class="btn btn-secondary mt-3 ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

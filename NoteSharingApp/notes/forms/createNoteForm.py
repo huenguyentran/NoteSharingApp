@@ -7,23 +7,23 @@ class CreateNoteForm(forms.ModelForm):
         fields = [
             'title',
             'content',
-            'is_shared_via_link', # Thêm trường này
-            'link_permission'     # Thêm trường này
+            'is_shared_via_link', # Add this field
+            'link_permission'     # Add this field
         ]
         labels = {
-            'title': 'Tiêu đề',
-            'content': 'Nội dung',
-            'is_shared_via_link': 'Chia sẻ bằng link', # Nhãn cho checkbox
-            'link_permission': 'Quyền chia sẻ qua link' # Nhãn cho select
+            'title': 'Title',
+            'content': 'Content',
+            'is_shared_via_link': 'Share via Link', # Label for checkbox
+            'link_permission': 'Link Permission' # Label for select
         }
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nhập tiêu đề'
+                'placeholder': 'Enter title'
             }),
             'content': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nhập nội dung ghi chú',
+                'placeholder': 'Enter note content',
                 'rows': 8,
                 'id': 'note-content'
             }),

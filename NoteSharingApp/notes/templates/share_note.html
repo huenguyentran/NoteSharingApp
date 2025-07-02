@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chia sẻ ghi chú - My Notes App</title>
+    <title>Share Note - My Notes App</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -18,7 +18,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>Chia sẻ ghi chú</h1>
+      <h1>Share Note</h1>
 
       <!-- {% if error %}
       <div class="message error">
@@ -38,34 +38,32 @@
         {% csrf_token %} 
 
         <div class="form-group">
-          <label for="search-user"><i class="fas fa-search"></i> Tìm người dùng:</label>
-          <input type="text" id="search-user" placeholder="Nhập tên hoặc email..." oninput="searchUsers()" />
+          <label for="search-user"><i class="fas fa-search"></i> Search Users:</label>
+          <input type="text" id="search-user" placeholder="Enter name or email..." oninput="searchUsers()" />
           <div id="user-list">
             <p class="placeholder-text">Nhập từ khóa để tìm người dùng...</p>
           </div>
           <div id="selected-users" style="display: none;">
-            <strong><i class="fas fa-user-check"></i> Đã chọn:</strong>
+            <strong><i class="fas fa-user-check"></i> Selected:</strong>
             <ul id="selected-user-list"></ul>
           </div>
         </div>
         
         <div class="form-group">
-          <label for="permission"><i class="fas fa-shield-alt"></i> Quyền:</label>
+          <label for="permission"><i class="fas fa-shield-alt"></i> Permission:</label>
           <select id="permission" name="permission" required>
-            <option value="view">Chỉ xem</option>
-            <option value="edit">Chỉnh sửa</option>
+            <option value="view">View Only</option>
+            <option value="edit">Edit</option>
           </select>
         </div>
         
         <div class="form-actions">
-          <button type="submit" class="button button-primary"><i class="fas fa-share-alt"></i> Chia sẻ</button>
-          <a href="{% url 'dashboard' %}" class="button button-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Quay lại Dashboard</a>
+          <button type="submit" class="button button-primary"><i class="fas fa-share-alt"></i> Share</button>
+          <a href="{% url 'dashboard' %}" class="button button-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Back to Dashboard</a>
         </div>
       </form>
       
-      <hr />
-
-      <h2 class="shared-user-list-section">Đã chia sẻ với:</h2>
+      <h2 class="shared-user-list-section">Shared With:</h2>
       {% if shared_users %}
       <form method="post" id="updateShareForm">
         {% csrf_token %}
@@ -95,7 +93,7 @@
         {% endfor %}
       {% else %}
       <p class="empty-state-message" id="noSharedUsersMessage">
-          <i class="fas fa-info-circle"></i> Chưa chia sẻ ghi chú này với ai.
+          <i class="fas fa-info-circle"></i> This note has not been shared with anyone yet.
       </p>
       {% endif %}
     </div>

@@ -1,16 +1,24 @@
+# D:\Learning\REPO_GITHUB\NoteSharingApp\NoteSharingApp\workspaces\models.py
+
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.urls import reverse # Cần cho get_absolute_url()
 
-# Create your models here.
+User = get_user_model()
+
 def workspace_uploadThumb_path(instance, filename):
-    return f'workspace_files/{instance.id}/{filename}_{timezone.now().strftime("%Y%m%d%H%M%S")}'
+    return f'workspace_thumbnails/{instance.pk}/{filename}_{timezone.now().strftime("%Y%m%d%H%M%S")}'
 
 class Workspace(models.Model):
-    name = models.CharField(max_length=200)  
-
-    thumbnail = models.ImageField(upload_to=workspace_uploadThumb_path, blank=True, null=True)   
-    description = models.TextField()       
-
+    name = models.CharField(max_length=200)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='owned_workspaces'
+    )
+    thumbnail = models.ImageField(upload_to=workspace_uploadThumb_path, blank=True, null=True)
+    description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -18,20 +26,21 @@ class Workspace(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('workspace_detail', kwargs={'pk': self.pk})
 
-    
 class WorkspaceMember(models.Model):
     class Meta:
         unique_together = ('workspace', 'user')
 
     workspace = models.ForeignKey(
-        Workspace, 
+        Workspace,
         on_delete=models.CASCADE,
         related_name='members'
     )
 
     user = models.ForeignKey(
-        'auth.User', 
+        User,
         on_delete=models.CASCADE,
         related_name='workspace_memberships'
     )
@@ -48,12 +57,11 @@ class WorkspaceMember(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return self.user.username + " in " + self.workspace.name    
-    
+        return self.user.username + " in " + self.workspace.name
 
 class WorkspaceFile(models.Model):
     workspace = models.ForeignKey(
-        Workspace, 
+        Workspace,
         on_delete=models.CASCADE
     )
 
@@ -63,9 +71,9 @@ class WorkspaceFile(models.Model):
     file = models.FileField(upload_to=workspace_upload_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(
-        'auth.User', 
+        User,
         on_delete=models.CASCADE
     )
-    
+
     def __str__(self):
         return self.file.name

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ note.title }} - Xem Ghi Chú</title>
+    <title>{{ note.title }} - View Note</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
         rel="stylesheet"
@@ -22,86 +22,86 @@
         <h1>Xem Ghi Chú</h1>
         <div id="note-meta" data-note-id="{{ note.pk }}" data-user="{{ user.username }}" data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}" data-csrf="{{ csrf_token }}"></div>
         <div class="note-display">
-            <label>Tiêu đề:</label>
+            <label>Title:</label>
             <div class="display-value">{{ note.title }}</div>
         </div>
 
         <div class="note-display">
-            <label>Nội dung:</label>
+            <label>Content:</label>
             <div class="display-value content-value">
                 {{ note.content|safe }}
             </div>
         </div>
 
         <div class="note-meta-info">
-            <p><strong>Tạo bởi:</strong> {{ note.create_by.username }}</p>
-            <p><strong>Tạo lúc:</strong> {{ note.created_at|date:"F j, Y H:i" }}</p>
-            <p><strong>Cập nhật cuối:</strong> {{ note.updated_at|date:"F j, Y H:i" }}</p>
+            <p><strong>Created by:</strong> {{ note.create_by.username }}</p>
+            <p><strong>Created at:</strong> {{ note.created_at|date:"F j, Y H:i" }}</p>
+            <p><strong>Last updated:</strong> {{ note.updated_at|date:"F j, Y H:i" }}</p>
         </div>
 
         {% if share_link %}
         <div class="share-link-section">
-            <p>Liên kết chia sẻ (Quyền: <strong>{{ note.get_link_permission_display }}</strong>):</p>
+            <p>Share Link (Permission: <strong>{{ note.get_link_permission_display }}</strong>):</p>
             <div class="input-group mb-3 share-link-input-group">
                 <input type="text" id="shareLink" class="form-control share-link-input" value="{{ share_link }}" readonly>
                 <button class="btn btn-primary copy-button" onclick="copyShareLink()">
-                    <i class="fas fa-copy"></i> Sao chép
+                    <i class="fas fa-copy"></i> Copy
                 </button>
             </div>
-            <small class="text-muted">Chia sẻ liên kết này với những người bạn muốn xem hoặc chỉnh sửa ghi chú.</small>
+            <small class="text-muted">Share this link with those you want to view or edit the note.</small>
         </div>
         {% endif %}
 
         <div class="form-actions">
             {% if permission == 'owner' or permission == 'edit' %}
             <a href="{% url 'edit_note' note.id %}" class="button button-primary">
-                <i class="fas fa-edit"></i> Sửa Ghi Chú
+                <i class="fas fa-edit"></i> Edit Note
             </a>
             {% endif %}
 
             <a href="{% if note.workspace %}{% url 'workspace_detail' note.workspace.pk %}{% else %}{% url 'dashboard' %}{% endif %}" class="button button-secondary">
-                <i class="fas fa-arrow-left"></i> Quay lại
+                <i class="fas fa-arrow-left"></i> Back
             </a>
 
             {% if is_owner %} {# Chỉ hiển thị nút Chia sẻ nếu là chủ sở hữu của ghi chú #}
             <a href="{% url 'share_note' note.id %}" class="button button-primary">
-                <i class="fas fa-share-alt"></i> Chia sẻ
+                <i class="fas fa-share-alt"></i> Share
             </a>
             {% endif %}
 
             {% if is_owner %} {# Nút Xóa cũng chỉ hiển thị cho chủ sở hữu #}
             <a href="{% url 'delete_note' note.id %}" class="button button-danger">
-                <i class="fas fa-trash-alt"></i> Xóa
+                <i class="fas fa-trash-alt"></i> Delete
             </a>
             {% endif %}
 
             <button id="toggle-comments" class="button button-secondary">
-                <i class="fas fa-comments"></i> Xem Bình luận
+                <i class="fas fa-comments"></i> View Comments
             </button>
         </div>
 
         <div id="comments-section" class="comments-section">
-            <h2>Bình luận</h2>
+            <h2>Comments</h2>
 
             {% if user.is_authenticated %}
             <div class="comment-form">
-                <textarea id="comment-content" placeholder="Viết bình luận của bạn..."></textarea>
+                <textarea id="comment-content" placeholder="Write your comment..."></textarea>
                 <div style="overflow: hidden;">
-                    <button id="submit-comment" class="button button-primary"><i class="fas fa-paper-plane"></i> Gửi Bình luận</button>
+                    <button id="submit-comment" class="button button-primary"><i class="fas fa-paper-plane"></i> Submit Comment</button>
                 </div>
                 <div id="comment-error-message" class="error-message"></div>
             </div>
             {% else %}
-            <p class="text-center text-muted">Bạn cần <a href="{% url 'login' %}">đăng nhập</a> để bình luận.</p>
+            <p class="text-center text-muted">You need to <a href="{% url 'login' %}">log in</a> to comment.</p>
             {% endif %}
 
             <ul id="comments-list" class="comments-list">
             </ul>
 
             <div class="pagination-controls">
-                <button id="prev-page" class="pagination-button" disabled><i class="fas fa-chevron-left"></i> Trang trước</button>
-                <span id="current-page-info" class="text-muted">Trang 1 / 1</span>
-                <button id="next-page" class="pagination-button" disabled>Trang sau <i class="fas fa-chevron-right"></i></button>
+                <button id="prev-page" class="pagination-button" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+                <span id="current-page-info" class="text-muted">Page 1 / 1</span>
+                <button id="next-page" class="pagination-button" disabled>Next <i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </div>

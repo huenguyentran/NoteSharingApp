@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cài đặt tài khoản - My Notes App</title>
+    <title>Account Settings - My Notes App</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -44,7 +44,7 @@
       }
 
       .container {
-        max-width: 500px; /* Đặt lại max-width cho container chính */
+        max-width: 500px; /* Reset max-width for the main container */
         width: 95%;
         margin: 30px auto;
         padding: 25px;
@@ -103,11 +103,11 @@
 
       /* Wrapper for forms to manage active form */
       .form-section {
-          display: none; /* Mặc định ẩn tất cả các phần form */
+          display: none; /* Hide all form sections by default */
       }
 
       .form-section.active {
-          display: block; /* Chỉ hiển thị phần form đang active */
+          display: block; /* Only display the active form section */
       }
 
       /* Tabs/buttons to switch forms */
@@ -115,7 +115,7 @@
           display: flex;
           justify-content: center;
           gap: 10px;
-          margin-bottom: 30px; /* Khoảng cách giữa nút toggle và form */
+          margin-bottom: 30px; /* Space between toggle buttons and form */
           flex-wrap: wrap;
       }
 
@@ -287,14 +287,14 @@
           width: 100%;
         }
         .button-tab {
-            width: 100%; /* Tabs cũng chiếm 100% chiều rộng trên di động */
+            width: 100%; /* Tabs also take 100% width on mobile */
         }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Cài đặt tài khoản</h1>
+      <h1>Account Settings</h1>
 
       {% if messages %}
       <ul class="message-list">
@@ -309,17 +309,17 @@
 
       <div class="form-toggle-buttons">
           <button id="show-account-info" class="button-tab active">
-              <i class="fas fa-user-circle"></i> Thông tin tài khoản
+              <i class="fas fa-user-circle"></i> Account Information
           </button>
           <button id="show-change-password" class="button-tab">
-              <i class="fas fa-key"></i> Thay đổi mật khẩu
+              <i class="fas fa-key"></i> Change Password
           </button>
       </div>
 
       <div id="account-info-section" class="form-section active">
         <form method="POST" action="{% url 'account_settings' %}" id="account-info-form">
           {% csrf_token %}
-          <h2>Thông tin tài khoản</h2>
+          <h2>Account Information</h2>
           {% for field in account_form %}
           <div class="form-group">
               <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
@@ -337,7 +337,7 @@
           </div>
           {% endfor %}
           <div class="form-actions">
-            <button type="submit" name="update_account" class="button button-primary"><i class="fas fa-save"></i> Lưu thay đổi</button>
+            <button type="submit" name="update_account" class="button button-primary"><i class="fas fa-save"></i> Save Changes</button>
           </div>
         </form>
       </div>
@@ -349,7 +349,7 @@
           id="change-password-form"
         >
           {% csrf_token %}
-          <h2>Thay đổi mật khẩu</h2>
+          <h2>Change Password</h2>
           {% for field in password_form %}
           <div class="form-group">
               <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
@@ -367,7 +367,7 @@
           </div>
           {% endfor %}
           <div class="form-actions">
-            <button type="submit" name="change_password" class="button button-primary"><i class="fas fa-lock-open"></i> Cập nhật mật khẩu</button>
+            <button type="submit" name="change_password" class="button button-primary"><i class="fas fa-lock-open"></i> Update Password</button>
           </div>
         </form>
       </div>
@@ -375,7 +375,7 @@
       <hr />
 
       <div class="bottom-dashboard-button">
-          <a href="{% url 'dashboard' %}" class="button button-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Quay lại Dashboard</a>
+          <a href="{% url 'dashboard' %}" class="button button-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Back to Dashboard</a>
       </div>
     </div>
 

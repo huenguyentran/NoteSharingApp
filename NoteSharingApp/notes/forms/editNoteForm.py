@@ -11,19 +11,19 @@ class EditNoteForm(forms.ModelForm):
             'link_permission'
         ]
         labels = {
-            'title': 'Tiêu đề',
-            'content': 'Nội dung',
-            'is_shared_via_link': 'Chia sẻ bằng link',
-            'link_permission': 'Quyền chia sẻ qua link'
+            'title': 'Title',
+            'content': 'Content',
+            'is_shared_via_link': 'Share via Link',
+            'link_permission': 'Link Permission'
         }
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nhập tiêu đề'
+                'placeholder': 'Enter title'
             }),
             'content': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nhập nội dung ghi chú',
+                'placeholder': 'Enter note content',
                 'rows': 8,
                 'id': 'note-content'
             }),
