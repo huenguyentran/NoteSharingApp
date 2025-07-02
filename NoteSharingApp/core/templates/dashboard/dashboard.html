@@ -87,9 +87,13 @@
                             <a href="{% url 'edit_note' note.id %}" class="btn btn-sm btn-info">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
-                            <a href="{% url 'delete_note' note.id %}" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash-alt"></i> Delete
-                            </a>
+                            {# THAY THẾ NÚT DELETE BẰNG FORM NÀY #}
+<form action="{% url 'delete_note' note.id %}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this note?');">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm btn-danger">
+        <i class="fas fa-trash-alt"></i> Delete
+    </button>
+</form>
                             <a href="{% url 'share_note' note.id %}" class="btn btn-sm btn-success">
                                 <i class="fas fa-share-alt"></i> Share
                             </a>
