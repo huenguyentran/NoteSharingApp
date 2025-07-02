@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chia sẻ ghi chú - My Notes App</title>
+    <title>Share Note - My Notes App</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -386,7 +386,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>Chia sẻ ghi chú</h1>
+      <h1>Share Note</h1>
 
       {% if error %}
       <div class="message error">
@@ -398,7 +398,7 @@
       {% if success %}
       <div class="message success">
         <i class="fas fa-check-circle"></i>
-        <p>Ghi chú đã được chia sẻ với {{ shared_with }} với quyền {{ permission }}.</p>
+        <p>Note successfully shared  .</p>
       </div>
       {% endif %}
 
@@ -406,8 +406,8 @@
         {% csrf_token %} 
 
         <div class="form-group">
-          <label for="search-user"><i class="fas fa-search"></i> Tìm người dùng:</label>
-          <input type="text" id="search-user" placeholder="Nhập tên hoặc email..." oninput="searchUsers()" />
+          <label for="search-user"><i class="fas fa-search"></i> Search Users:</label>
+          <input type="text" id="search-user" placeholder="Enter name or email..." oninput="searchUsers()" />
           <div id="user-list">
             {% for user in users %}
             <label class="user-item" data-id="{{ user.id }}" data-name="{{ user.username|lower }} {{ user.email|lower }}">
@@ -417,28 +417,26 @@
             {% endfor %}
           </div>
           <div id="selected-users" style="display: none;">
-            <strong><i class="fas fa-user-check"></i> Đã chọn:</strong>
+            <strong><i class="fas fa-user-check"></i> Selected:</strong>
             <ul id="selected-user-list"></ul>
           </div>
         </div>
         
         <div class="form-group">
-          <label for="permission"><i class="fas fa-shield-alt"></i> Quyền:</label>
+          <label for="permission"><i class="fas fa-shield-alt"></i> Permission:</label>
           <select id="permission" name="permission" required>
-            <option value="view">Chỉ xem</option>
-            <option value="edit">Chỉnh sửa</option>
+            <option value="view">View Only</option>
+            <option value="edit">Edit</option>
           </select>
         </div>
         
         <div class="form-actions">
-          <button type="submit" class="button button-primary"><i class="fas fa-share-alt"></i> Chia sẻ</button>
-          <a href="{% url 'dashboard' %}" class="button button-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Quay lại Dashboard</a>
+          <button type="submit" class="button button-primary"><i class="fas fa-share-alt"></i> Share</button>
+          <a href="{% url 'dashboard' %}" class="button button-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Back to Dashboard</a>
         </div>
       </form>
       
-      <hr />
-
-      <h2 class="shared-user-list-section">Đã chia sẻ với:</h2>
+      <h2 class="shared-user-list-section">Shared With:</h2>
       {% if shared_users %}
       <form method="post" id="updateShareForm">
         {% csrf_token %}
@@ -449,33 +447,30 @@
           </div>
           <div class="shared-user-actions">
             <select name="update_permission_{{ share.id }}">
-              <option value="view" {% if share.permission == "view" %}selected{% endif %}>Chỉ xem</option>
-              <option value="edit" {% if share.permission == "edit" %}selected{% endif %}>Chỉnh sửa</option>
+              <option value="view" {% if share.permission == "view" %}selected{% endif %}>View Only</option>
+              <option value="edit" {% if share.permission == "edit" %}selected{% endif %}>Edit</option>
             </select>
-            <button type="submit" name="delete_share_id" value="{{ share.id }}" class="button button-danger" onclick="return confirm('Xoá chia sẻ với {{ share.share_with.username }}?')">
-              <i class="fas fa-trash-alt"></i> Xóa
+            <button type="submit" name="delete_share_id" value="{{ share.id }}" class="button button-danger" onclick="return confirm('Delete share with {{ share.share_with.username }}?')">
+              <i class="fas fa-trash-alt"></i> Delete
             </button>
           </div>
         </div>
         {% endfor %}
         
         <div class="form-actions" style="margin-top: 20px; justify-content: flex-start;">
-            <button type="submit" name="update_permissions" value="1" class="button button-primary"><i class="fas fa-save"></i> Cập nhật quyền</button>
+            <button type="submit" name="update_permissions" value="1" class="button button-primary"><i class="fas fa-save"></i> Update Permissions</button>
         </div>
       </form>
       {% else %}
       <p class="empty-state-message" id="noSharedUsersMessage">
-          <i class="fas fa-info-circle"></i> Chưa chia sẻ ghi chú này với ai.
+          <i class="fas fa-info-circle"></i> This note has not been shared with anyone yet.
       </p>
       {% endif %}
     </div>
 
     <script src="{% static 'notes/js/user.js' %}"></script>
     <script>
-
-
         document.addEventListener('DOMContentLoaded', () => {
-          
             const checkboxes = document.querySelectorAll('#user-list input[name="share_with_ids"]');
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateSelectedUsers);

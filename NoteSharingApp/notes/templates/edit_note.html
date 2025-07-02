@@ -285,7 +285,6 @@
                         <li>{{ error }}</li>
                     {% endfor %}
                 </ul>
-            </ul>
             {% endif %}
         </div>
 
@@ -317,7 +316,7 @@
 
         {% if share_link %}
           <button type="button" class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#shareLinkModal">
-            Lấy link chia sẻ
+            Get Shareable Link
           </button>
 
           <div class="modal fade" id="shareLinkModal" tabindex="-1" aria-labelledby="shareLinkModalLabel" aria-hidden="true">
@@ -325,8 +324,8 @@
               <div class="modal-content">
 
                 <div class="modal-header">
-                  <h5 class="modal-title" id="shareLinkModalLabel">Link chia sẻ</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                  <h5 class="modal-title" id="shareLinkModalLabel">Shareable Link</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
@@ -338,7 +337,7 @@
                 </div>
 
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
 
               </div>
@@ -351,8 +350,8 @@
               input.select();
               input.setSelectionRange(0, 99999);
               navigator.clipboard.writeText(input.value)
-                .then(() => alert("Đã copy link chia sẻ!"))
-                .catch(() => alert("Không thể copy link"));
+                .then(() => alert("Share link copied!"))
+                .catch(() => alert("Failed to copy link"));
             }
           </script>
         {% endif %}
@@ -392,12 +391,12 @@
               if (isSharedCheckbox.checked) {
                   linkPermissionGroup.style.display = 'block';
                   if (shareLinkButton) {
-                      shareLinkButton.style.display = 'block'; // Show "Lấy link chia sẻ" button
+                      shareLinkButton.style.display = 'block'; // Show "Get Shareable Link" button
                   }
               } else {
                   linkPermissionGroup.style.display = 'none';
                   if (shareLinkButton) {
-                      shareLinkButton.style.display = 'none'; // Hide "Lấy link chia sẻ" button
+                      shareLinkButton.style.display = 'none'; // Hide "Get Shareable Link" button
                   }
               }
           }

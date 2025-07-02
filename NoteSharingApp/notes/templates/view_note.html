@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ note.title }} - Xem Ghi Chú</title>
+    <title>{{ note.title }} - View Note</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
         rel="stylesheet"
@@ -389,95 +389,95 @@
 </head>
 <body>
     <div class="container">
-        <h1>Xem Ghi Chú</h1>
+        <h1>View Note</h1>
 
         <div class="note-display">
-            <label>Tiêu đề:</label>
+            <label>Title:</label>
             <div class="display-value">{{ note.title }}</div>
         </div>
 
         <div class="note-display">
-            <label>Nội dung:</label>
+            <label>Content:</label>
             <div class="display-value content-value">
                 {{ note.content|safe }}
             </div>
         </div>
 
         <div class="note-meta-info">
-            <p><strong>Tạo bởi:</strong> {{ note.create_by.username }}</p>
-            <p><strong>Tạo lúc:</strong> {{ note.created_at|date:"F j, Y H:i" }}</p>
-            <p><strong>Cập nhật cuối:</strong> {{ note.updated_at|date:"F j, Y H:i" }}</p>
+            <p><strong>Created by:</strong> {{ note.create_by.username }}</p>
+            <p><strong>Created at:</strong> {{ note.created_at|date:"F j, Y H:i" }}</p>
+            <p><strong>Last updated:</strong> {{ note.updated_at|date:"F j, Y H:i" }}</p>
         </div>
 
         {% if share_link %}
         <div class="share-link-section">
-            <p>Liên kết chia sẻ (Quyền: <strong>{{ note.get_link_permission_display }}</strong>):</p>
+            <p>Share Link (Permission: <strong>{{ note.get_link_permission_display }}</strong>):</p>
             <div class="input-group mb-3 share-link-input-group">
                 <input type="text" id="shareLink" class="form-control share-link-input" value="{{ share_link }}" readonly>
                 <button class="btn btn-primary copy-button" onclick="copyShareLink()">
-                    <i class="fas fa-copy"></i> Sao chép
+                    <i class="fas fa-copy"></i> Copy
                 </button>
             </div>
-            <small class="text-muted">Chia sẻ liên kết này với những người bạn muốn xem hoặc chỉnh sửa ghi chú.</small>
+            <small class="text-muted">Share this link with those you want to view or edit the note.</small>
         </div>
         {% endif %}
 
         <div class="form-actions">
             {% if permission == 'owner' or permission == 'edit' %}
             <a href="{% url 'edit_note' note.id %}" class="button button-primary">
-                <i class="fas fa-edit"></i> Sửa Ghi Chú
+                <i class="fas fa-edit"></i> Edit Note
             </a>
             {% endif %}
 
             <a href="{% if note.workspace %}{% url 'workspace_detail' note.workspace.pk %}{% else %}{% url 'dashboard' %}{% endif %}" class="button button-secondary">
-                <i class="fas fa-arrow-left"></i> Quay lại
+                <i class="fas fa-arrow-left"></i> Back
             </a>
 
             {% if is_owner %} {# Chỉ hiển thị nút Chia sẻ nếu là chủ sở hữu của ghi chú #}
             <a href="{% url 'share_note' note.id %}" class="button button-primary">
-                <i class="fas fa-share-alt"></i> Chia sẻ
+                <i class="fas fa-share-alt"></i> Share
             </a>
             {% endif %}
 
             {% if is_owner %} {# Nút Xóa cũng chỉ hiển thị cho chủ sở hữu #}
             <a href="{% url 'delete_note' note.id %}" class="button button-danger">
-                <i class="fas fa-trash-alt"></i> Xóa
+                <i class="fas fa-trash-alt"></i> Delete
             </a>
             {% endif %}
 
             <button id="toggle-comments" class="button button-secondary">
-                <i class="fas fa-comments"></i> Xem Bình luận
+                <i class="fas fa-comments"></i> View Comments
             </button>
         </div>
 
         <div id="comments-section" class="comments-section">
-            <h2>Bình luận</h2>
+            <h2>Comments</h2>
 
             {% if user.is_authenticated %}
             <div class="comment-form">
-                <textarea id="comment-content" placeholder="Viết bình luận của bạn..."></textarea>
+                <textarea id="comment-content" placeholder="Write your comment..."></textarea>
                 <div style="overflow: hidden;">
-                    <button id="submit-comment" class="button button-primary"><i class="fas fa-paper-plane"></i> Gửi Bình luận</button>
+                    <button id="submit-comment" class="button button-primary"><i class="fas fa-paper-plane"></i> Submit Comment</button>
                 </div>
                 <div id="comment-error-message" class="error-message"></div>
             </div>
             {% else %}
-            <p class="text-center text-muted">Bạn cần <a href="{% url 'login' %}">đăng nhập</a> để bình luận.</p>
+            <p class="text-center text-muted">You need to <a href="{% url 'login' %}">log in</a> to comment.</p>
             {% endif %}
 
             <ul id="comments-list" class="comments-list">
             </ul>
 
             <div class="pagination-controls">
-                <button id="prev-page" class="pagination-button" disabled><i class="fas fa-chevron-left"></i> Trang trước</button>
-                <span id="current-page-info" class="text-muted">Trang 1 / 1</span>
-                <button id="next-page" class="pagination-button" disabled>Trang sau <i class="fas fa-chevron-right"></i></button>
+                <button id="prev-page" class="pagination-button" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+                <span id="current-page-info" class="text-muted">Page 1 / 1</span>
+                <button id="next-page" class="pagination-button" disabled>Next <i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </div>
 
     <script>
-        // Lấy các phần tử HTML
+        // Get HTML elements
         const commentsSection = document.getElementById('comments-section');
         const toggleCommentsButton = document.getElementById('toggle-comments');
         const commentsList = document.getElementById('comments-list');
@@ -488,7 +488,7 @@
         const nextPageButton = document.getElementById('next-page');
         const currentPageInfo = document.getElementById('current-page-info');
 
-        // Biến lưu trữ trạng thái phân trang, lấy NOTE_ID và CSRF_TOKEN từ Django context
+        // Variables for pagination state, get NOTE_ID and CSRF_TOKEN from Django context
         const NOTE_ID = "{{ note.id }}";
         const CURRENT_USER = "{{ user.username }}";
         const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}"; // Pass as boolean string
@@ -496,18 +496,18 @@
 
         let currentPage = 1;
         let totalPages = 1;
-        let commentsLoaded = false; // Biến mới để theo dõi xem comments đã được tải lần đầu chưa
+        let commentsLoaded = false; // New variable to track if comments have been loaded for the first time
 
         /**
-         * Hàm để lấy CSRF token.
+         * Function to get CSRF token.
          */
         function getCsrfToken() {
             return CSRF_TOKEN;
         }
 
         /**
-         * Hiển thị thông báo lỗi.
-         * @param {string} message - Nội dung thông báo lỗi.
+         * Display error message.
+         * @param {string} message - The error message content.
          */
         function displayError(message) {
             commentErrorMessage.textContent = message;
@@ -515,7 +515,7 @@
         }
 
         /**
-         * Xóa thông báo lỗi.
+         * Clear error message.
          */
         function clearError() {
             commentErrorMessage.textContent = '';
@@ -523,9 +523,9 @@
         }
 
         /**
-         * Hàm format thời gian hiển thị.
-         * @param {string} isoString - Chuỗi thời gian ISO từ server (ví dụ: "2024-07-02T10:30:00Z").
-         * @returns {string} Chuỗi thời gian đã format.
+         * Function to format display time.
+         * @param {string} isoString - ISO time string from the server (e.g., "2024-07-02T10:30:00Z").
+         * @returns {string} Formatted time string.
          */
         function formatDateTime(isoString) {
             const date = new Date(isoString);
@@ -537,21 +537,21 @@
                 minute: '2-digit',
                 hour12: false // 24-hour format
             };
-            // Đặt múi giờ nếu server và client khác múi giờ
-            // options.timeZone = 'Asia/Ho_Chi_Minh'; // Ví dụ: múi giờ Việt Nam
-            return date.toLocaleDateString('vi-VN', options) + ' ' + date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+            // Set timezone if server and client have different timezones
+            // options.timeZone = 'Asia/Ho_Chi_Minh'; // Example: Vietnam timezone
+            return date.toLocaleDateString('en-US', options) + ' ' + date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         }
 
 
         /**
-         * Tải danh sách comments cho note hiện tại.
-         * @param {number} page - Số trang comments muốn tải.
+         * Load comments list for the current note.
+         * @param {number} page - The page number of comments to load.
          */
         async function fetchComments(page) {
             clearError();
             if (!NOTE_ID) {
                 console.error("NOTE_ID is not defined. Cannot load comments.");
-                displayError("Lỗi: Không thể tải bình luận. ID ghi chú không xác định.");
+                displayError("Error: Cannot load comments. Note ID is undefined.");
                 return;
             }
             try {
@@ -561,25 +561,25 @@
                 }
                 const data = await response.json();
                 renderComments(data);
-                commentsLoaded = true; // Đánh dấu là comments đã được tải ít nhất một lần
+                commentsLoaded = true; // Mark comments as loaded at least once
                 console.log('Comments data:', data);
             } catch (error) {
                 console.error('Error fetching comments:', error);
-                displayError('Không thể tải bình luận. Vui lòng thử lại.');
+                displayError('Failed to load comments. Please try again.');
             }
         }
 
         /**
-         * Render danh sách comments lên giao diện.
-         * @param {Object} data - Dữ liệu comments từ API (bao gồm comments, current_page, total_pages...).
+         * Render the list of comments to the interface.
+         * @param {Object} data - Comments data from the API (includes comments, current_page, total_pages...).
          */
         function renderComments(data) {
-            commentsList.innerHTML = ''; // Xóa comments cũ
+            commentsList.innerHTML = ''; // Clear old comments
             if (data.comments && data.comments.length > 0) {
                 data.comments.forEach(comment => {
                     const li = document.createElement('li');
                     li.className = 'comment-item';
-                    li.setAttribute('data-comment-id', comment.id); // Lưu ID comment
+                    li.setAttribute('data-comment-id', comment.id); // Store comment ID
                     li.innerHTML = `
                         <div class="comment-header">
                             <span class="comment-user">${comment.user}</span>
@@ -588,35 +588,35 @@
                         <div class="comment-content">${comment.content}</div>
                         <div class="comment-actions">
                             ${comment.user === CURRENT_USER && IS_AUTHENTICATED === 'true' ? `
-                            <button class="delete-button" data-comment-id="${comment.id}"><i class="fas fa-trash-alt"></i> Xóa</button>
+                            <button class="delete-button" data-comment-id="${comment.id}"><i class="fas fa-trash-alt"></i> Delete</button>
                             ` : ''}
                         </div>
                     `;
                     commentsList.appendChild(li);
                 });
-                attachDeleteEventListeners(); // Gắn lại sự kiện xóa cho các nút mới
+                attachDeleteEventListeners(); // Re-attach delete event for new buttons
             } else {
-                commentsList.innerHTML = '<li class="text-center text-muted">Chưa có bình luận nào.</li>';
+                commentsList.innerHTML = '<li class="text-center text-muted">No comments yet.</li>';
             }
 
-            // Cập nhật thông tin phân trang
+            // Update pagination information
             currentPage = data.current_page;
             totalPages = data.total_pages;
-            currentPageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
+            currentPageInfo.textContent = `Page ${currentPage} / ${totalPages}`;
 
             prevPageButton.disabled = !data.has_previous;
             nextPageButton.disabled = !data.has_next;
         }
 
         /**
-         * Gửi comment mới đến server.
+         * Submit a new comment to the server.
          */
         async function postComment() {
             clearError();
             const content = commentContentInput.value.trim();
 
             if (!content) {
-                displayError('Nội dung bình luận không được để trống.');
+                displayError('Comment content cannot be empty.');
                 return;
             }
 
@@ -625,7 +625,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken(), // Sử dụng CSRF token
+                        'X-CSRFToken': getCsrfToken(), // Use CSRF token
                     },
                     body: JSON.stringify({
                         note_id: NOTE_ID,
@@ -636,27 +636,27 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    commentContentInput.value = ''; // Xóa nội dung input
-                    // Tải lại trang đầu tiên để thấy comment mới
-                    currentPage = 1; // Reset về trang 1 sau khi gửi comment
+                    commentContentInput.value = ''; // Clear input content
+                    // Reload the first page to see the new comment
+                    currentPage = 1; // Reset to page 1 after submitting comment
                     await fetchComments(currentPage);
                     console.log('Comment created:', data);
                 } else {
-                    displayError(data.error || 'Gửi bình luận thất bại. Vui lòng thử lại.');
+                    displayError(data.error || 'Failed to submit comment. Please try again.');
                     console.error('Error creating comment:', data);
                 }
             } catch (error) {
                 console.error('Error submitting comment:', error);
-                displayError('Đã xảy ra lỗi khi gửi bình luận. Vui lòng thử lại.');
+                displayError('An error occurred while submitting the comment. Please try again.');
             }
         }
 
         /**
-         * Xóa comment.
-         * @param {number} commentId - ID của comment cần xóa.
+         * Delete a comment.
+         * @param {number} commentId - ID of the comment to delete.
          */
         async function deleteComment(commentId) {
-            if (!confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+            if (!confirm('Are you sure you want to delete this comment?')) {
                 return;
             }
             clearError();
@@ -664,7 +664,7 @@
                 const response = await fetch(`/api/comments/${commentId}/`, {
                     method: 'DELETE',
                     headers: {
-                        'X-CSRFToken': getCsrfToken(), // Sử dụng CSRF token
+                        'X-CSRFToken': getCsrfToken(), // Use CSRF token
                     },
                 });
 
@@ -672,25 +672,25 @@
 
                 if (response.ok) {
                     console.log('Comment deleted:', data.message);
-                    // Tải lại comments của trang hiện tại sau khi xóa
+                    // Reload comments on the current page after deletion
                     await fetchComments(currentPage);
                 } else {
-                    displayError(data.error || 'Xóa bình luận thất bại. Vui lòng thử lại.');
+                    displayError(data.error || 'Failed to delete comment. Please try again.');
                     console.error('Error deleting comment:', data);
                 }
             } catch (error) {
                 console.error('Error deleting comment:', error);
-                displayError('Đã xảy ra lỗi khi xóa bình luận. Vui lòng thử lại.');
+                displayError('An error occurred while deleting the comment. Please try again.');
             }
         }
 
         /**
-         * Gắn sự kiện click cho các nút xóa comment.
+         * Attach click events to comment delete buttons.
          */
         function attachDeleteEventListeners() {
             document.querySelectorAll('.comment-actions .delete-button').forEach(button => {
                 button.onclick = (event) => {
-                    // Lấy commentId từ dataset của nút hoặc phần tử cha gần nhất
+                    // Get commentId from button's dataset or closest parent
                     const commentId = event.target.dataset.commentId || event.target.closest('button').dataset.commentId;
                     if (commentId) {
                         deleteComment(commentId);
@@ -699,22 +699,22 @@
             });
         }
 
-        // Event Listener cho nút ẩn/hiện bình luận
+        // Event Listener for toggling comments section
         toggleCommentsButton.addEventListener('click', () => {
             if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
                 commentsSection.style.display = 'block';
-                toggleCommentsButton.innerHTML = '<i class="fas fa-comments"></i> Ẩn Bình luận';
-                // Nếu comments chưa được tải lần nào, thì tải chúng
+                toggleCommentsButton.innerHTML = '<i class="fas fa-comments"></i> Hide Comments';
+                // If comments haven't been loaded yet, load them
                 if (!commentsLoaded) {
                     fetchComments(currentPage);
                 }
             } else {
                 commentsSection.style.display = 'none';
-                toggleCommentsButton.innerHTML = '<i class="fas fa-comments"></i> Xem Bình luận';
+                toggleCommentsButton.innerHTML = '<i class="fas fa-comments"></i> View Comments';
             }
         });
 
-        // Event Listeners cho các nút bình luận (chỉ khi người dùng đã đăng nhập)
+        // Event Listeners for comment buttons (only if user is authenticated)
         if (IS_AUTHENTICATED === 'true') {
             submitCommentButton.addEventListener('click', postComment);
         }
@@ -731,16 +731,16 @@
             }
         });
 
-        // Hàm sao chép link chia sẻ
+        // Function to copy share link
         function copyShareLink() {
             const shareLinkInput = document.getElementById('shareLink');
             shareLinkInput.select();
             shareLinkInput.setSelectionRange(0, 99999); // For mobile devices
 
             navigator.clipboard.writeText(shareLinkInput.value).then(() => {
-                alert('Liên kết đã được sao chép vào bộ nhớ tạm!');
+                alert('Link copied to clipboard!');
             }).catch(err => {
-                console.error('Không thể sao chép liên kết: ', err);
+                console.error('Failed to copy link: ', err);
             });
         }
     </script>

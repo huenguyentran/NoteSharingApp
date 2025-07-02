@@ -24,9 +24,9 @@ class LoginView(View):
             login(self.request, user)
             return redirect('dashboard')
         else:
-            messages.error(request, "Tên đăng nhập hoặc mật khẩu không đúng.")
+            messages.error(request, "Incorrect username or password.")
     else:
-        messages.error(request, "Vui lòng nhập đúng định dạng.")
+        messages.error(request, "Please enter in the correct format.")
         context = {
             'login_form': login_new_form, 
             'register_form': register_new_form 
