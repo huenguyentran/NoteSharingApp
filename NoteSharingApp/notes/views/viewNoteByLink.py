@@ -23,9 +23,17 @@ class ByLinkNoteView(View):
         
         if str(note.share_token) != str(token):
             return HttpResponseForbidden("Invalid token")
-
-        return render(request, "note_by_link.html", {
-            "note": note,
-        })
-    
+        
+        if not note.link_permission == 'view':
+            return render(request, "note_by_link.html", {
+                "note": note,
+            })
+        else:
+            context = {
+                'note': note,
+                'permission': note.link_permission,  # Lấy quyền từ note
+                'is_shared_to_current_user': False,
+                'is_owner': (note.create_by == request.user), # Thêm biến này để kiểm tra chủ sở hữu trong template
+            }
+            return render(request, 'view_note.html', context)
     

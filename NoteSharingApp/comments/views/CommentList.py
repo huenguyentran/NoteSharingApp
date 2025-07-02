@@ -8,7 +8,7 @@ from comments.models import Comment
 class CommentListView(BaseView):
     def get(self, request, note_id):
         page = request.GET.get("page", 1)
-        page_size = 5
+        page_size = 10
 
         try:
             note = Note.objects.get(id=note_id)
@@ -16,7 +16,6 @@ class CommentListView(BaseView):
             raise Http404("Note không tồn tại.")
 
         # Lấy các comment gốc (parent_comment = null)
-        # Đã sửa lỗi FieldError bằng cách đổi 'parentComment' thành 'parent_comment'
         comments = Comment.objects.filter(
             note=note,
             parent_comment__isnull=True, # ĐÃ SỬA TÊN TRƯỜNG TẠI ĐÂY
@@ -33,8 +32,6 @@ class CommentListView(BaseView):
                 "user": comment.user.username,
                 "content": comment.content,
                 "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M"),
-                # Nếu bạn muốn hiển thị cả comment con (replies), bạn sẽ cần thêm logic ở đây
-                # Ví dụ: "replies": self.get_replies(comment)
             })
 
         return JsonResponse({

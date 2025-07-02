@@ -4,7 +4,7 @@ from django.db.models import Q
 User = get_user_model()
 
 class UserService:
-    def get_user(self, *, user_id=None, email=None, name=None):
+    def get_users(self, *, user_id=None, email=None, name=None):
         """
         Tìm user theo:
         - id (nếu có)
@@ -25,7 +25,7 @@ class UserService:
 
         if name:
             return User.objects.filter(
-                Q(firstname__icontains=name) | Q(lastname__icontains=name)
+                 Q(first_name__icontains=name) | Q(last_name__icontains=name) | Q(username__icontains=name)
             ) 
 
         return None

@@ -9,7 +9,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    # THÊM DÒNG NÀY ĐỂ HỖ TRỢ BÌNH LUẬN CHA/CON
+
     parent_comment = models.ForeignKey(
         'self', # 'self' để tham chiếu đến chính model Comment
         on_delete=models.CASCADE,

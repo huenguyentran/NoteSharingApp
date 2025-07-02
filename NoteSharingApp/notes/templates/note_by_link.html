@@ -344,9 +344,9 @@
                 Bạn không có quyền truy cập ghi chú này thông qua liên kết.
             </div>
         {% else %}
-            <div class="permission-info">
+            <!-- <div class="permission-info">
                 Bạn đang xem ghi chú này với quyền: <strong>{{ note.get_link_permission_display }}</strong>.
-            </div>
+            </div> -->
 
             <div class="note-display">
                 <label>Tiêu đề:</label>
@@ -500,7 +500,7 @@
                 return;
             }
             try {
-                const response = await fetch(`/api/comments/note/${NOTE_ID}/?page=${page}`);
+                const response = await fetch(`/comments/note/${NOTE_ID}/?page=${page}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -571,7 +571,7 @@
             }
 
             try {
-                const response = await fetch('/api/comments/create/', {
+                const response = await fetch('/comments/create/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -618,7 +618,7 @@
             }
 
             try {
-                const response = await fetch(`/api/comments/${commentId}/`, {
+                const response = await fetch(`/comments/${commentId}/`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRFToken': getCsrfToken(),

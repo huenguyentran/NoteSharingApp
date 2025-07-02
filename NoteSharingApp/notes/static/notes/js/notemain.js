@@ -57,7 +57,7 @@ function renderNotes(notes) {
     listEl.innerHTML = ''; // Xóa danh sách cũ
 
     if (notes.length === 0) {
-        listEl.innerHTML = '<li class="no-notes"><p>You don\'t have any notes yet. Start by adding a new one!</p></li>';
+        listEl.innerHTML = '<li class="no-notes"><p>Bạn chưa có ghi chú nào. Hãy bắt đầu bằng cách thêm một ghi chú mới!</p></li>';
         return;
     }
 

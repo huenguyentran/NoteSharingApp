@@ -40,7 +40,6 @@ class shareNoteView(BaseView):
     def post(self, request, note_id):
         # Kiểm tra quyền sở hữu ngay từ đầu
         note = get_object_or_404(Note, id=note_id, create_by=request.user)
-        # Nếu bạn muốn trả về một ErrorView thay vì 404 của get_object_or_404, bạn có thể làm như sau:
         # try:
         #     note = Note.objects.get(id=note_id, create_by=request.user)
         # except Note.DoesNotExist:
@@ -82,7 +81,7 @@ class shareNoteView(BaseView):
             shares_to_update = NoteShare.objects.filter(note=note)
             updated_count = 0
             for share in shares_to_update:
-                new_perm = request.POST.get(f'permission_{share.id}') # Đảm bảo tên trường trong form khớp
+                new_perm = request.POST.get(f'update_permission_{share.id}')# Đảm bảo tên trường trong form khớp
                 if new_perm in ['view', 'edit'] and share.permission != new_perm:
                     share.permission = new_perm
                     share.save()

@@ -50,22 +50,22 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" aria-current="page" href="{% url 'dashboard' %}">Điều hướng</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'create_note' %}active{% endif %}" href="{% url 'create_note' %}">Create New Note</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'create_note' %}active{% endif %}" href="{% url 'create_note' %}">Tạo ghi chú mới</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'workspace_main' %}active{% endif %}" href="{% url 'workspace_main' %}">
-                        <i class="fas fa-folder-open"></i> My Workspaces
+                        <i class="fas fa-folder-open"></i> Nhóm
                     </a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Đăng nhập</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'register' %}">Đăng kí</a>
                 </li>
             {% endif %}
           </ul>
@@ -80,12 +80,12 @@
               <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Account
+                    Tài khoản
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{% url 'account_settings' %}">Settings</a></li>
+                    <li><a class="dropdown-item" href="{% url 'account_settings' %}">Chỉnh sửa</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Đằng xuất</a></li>
                   </ul>
                 </li>
               </ul>

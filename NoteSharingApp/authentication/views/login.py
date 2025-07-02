@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 class LoginView(View):
+  template_name = 'accounts/login_register.html'
   def get(self, request):
     return redirect('auth_combined')
 
@@ -25,10 +26,10 @@ class LoginView(View):
             return redirect('dashboard')
         else:
             messages.error(request, "Tên đăng nhập hoặc mật khẩu không đúng.")
-    else:
-        messages.error(request, "Vui lòng nhập đúng định dạng.")
-        context = {
-            'login_form': login_new_form, 
-            'register_form': register_new_form 
-        }
-        return render(request, self.template_name, context)
+
+    messages.error(request, "Vui lòng nhập đúng định dạng.")
+    context = {
+        'login_form': login_new_form, 
+        'register_form': register_new_form 
+    }
+    return render(request, self.template_name, context)
