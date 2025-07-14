@@ -171,12 +171,11 @@
             }
         }
 
-        /* Comments section styles */
         .comments-section {
             margin-top: 40px;
             border-top: 1px solid var(--border-color);
             padding-top: 30px;
-            display: none; /* Initially hidden */
+            display: none; 
         }
 
         .comments-section h2 {
@@ -424,7 +423,6 @@
 
     {% if not not_found and not not_shared and not permission_denied %}
     <script>
-        // Lấy các phần tử HTML
         const commentsSection = document.getElementById('comments-section');
         const toggleCommentsButton = document.getElementById('toggle-comments');
         const commentsList = document.getElementById('comments-list');
@@ -435,46 +433,30 @@
         const nextPageButton = document.getElementById('next-page');
         const currentPageInfo = document.getElementById('current-page-info');
 
-        // Biến lưu trữ trạng thái phân trang, lấy NOTE_ID và CSRF_TOKEN từ Django context
         const NOTE_ID = "{{ note.id }}";
         const CURRENT_USER = "{{ user.username }}";
-        const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}"; // Pass as boolean string
-        const CSRF_TOKEN = "{{ csrf_token }}"; // Pass CSRF token for POST requests
-        const LINK_PERMISSION = "{{ note.link_permission }}"; // Pass the link permission
+        const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}"; 
+        const CSRF_TOKEN = "{{ csrf_token }}";
+        const LINK_PERMISSION = "{{ note.link_permission }}"; 
 
         let currentPage = 1;
         let totalPages = 1;
-        let commentsLoaded = false; // Biến mới để theo dõi xem comments đã được tải lần đầu chưa
+        let commentsLoaded = false; 
 
-        /**
-         * Hàm để lấy CSRF token.
-         */
         function getCsrfToken() {
             return CSRF_TOKEN;
         }
 
-        /**
-         * Hiển thị thông báo lỗi.
-         * @param {string} message - Nội dung thông báo lỗi.
-         */
         function displayError(message) {
             commentErrorMessage.textContent = message;
             commentErrorMessage.style.display = 'block';
         }
 
-        /**
-         * Xóa thông báo lỗi.
-         */
         function clearError() {
             commentErrorMessage.textContent = '';
             commentErrorMessage.style.display = 'none';
         }
 
-        /**
-         * Hàm format thời gian hiển thị.
-         * @param {string} isoString - Chuỗi thời gian ISO từ server (ví dụ: "2024-07-02T10:30:00Z").
-         * @returns {string} Chuỗi thời gian đã format.
-         */
         function formatDateTime(isoString) {
             const date = new Date(isoString);
             const options = {
@@ -488,10 +470,7 @@
             return date.toLocaleDateString('vi-VN', options) + ' ' + date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
         }
 
-        /**
-         * Tải danh sách comments cho note hiện tại.
-         * @param {number} page - Số trang comments muốn tải.
-         */
+
         async function fetchComments(page) {
             clearError();
             if (!NOTE_ID) {
@@ -514,10 +493,7 @@
             }
         }
 
-        /**
-         * Render danh sách comments lên giao diện.
-         * @param {Object} data - Dữ liệu comments từ API (bao gồm comments, current_page, total_pages...).
-         */
+
         function renderComments(data) {
             commentsList.innerHTML = '';
             if (data.comments && data.comments.length > 0) {
@@ -552,9 +528,7 @@
             nextPageButton.disabled = !data.has_next;
         }
 
-        /**
-         * Gửi comment mới đến server.
-         */
+
         async function postComment() {
             clearError();
             const content = commentContentInput.value.trim();
@@ -564,7 +538,6 @@
                 return;
             }
 
-            // Check if authenticated and permitted to comment
             if (IS_AUTHENTICATED !== 'true' || (LINK_PERMISSION !== 'comment' && LINK_PERMISSION !== 'edit')) {
                 displayError('Bạn không có quyền gửi bình luận.');
                 return;
@@ -600,17 +573,13 @@
             }
         }
 
-        /**
-         * Xóa comment.
-         * @param {number} commentId - ID của comment cần xóa.
-         */
+
         async function deleteComment(commentId) {
             if (!confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
                 return;
             }
             clearError();
 
-            // Check if authenticated and permitted to delete (only owner of comment and if link allows comment/edit)
             const commentItem = document.querySelector(`.comment-item[data-comment-id="${commentId}"]`);
             if (!commentItem || commentItem.querySelector('.comment-user').textContent !== CURRENT_USER || IS_AUTHENTICATED !== 'true' || (LINK_PERMISSION !== 'comment' && LINK_PERMISSION !== 'edit')) {
                 displayError('Bạn không có quyền xóa bình luận này.');
@@ -640,9 +609,6 @@
             }
         }
 
-        /**
-         * Gắn sự kiện click cho các nút xóa comment.
-         */
         function attachDeleteEventListeners() {
             document.querySelectorAll('.comment-actions .delete-button').forEach(button => {
                 button.onclick = (event) => {
@@ -654,8 +620,7 @@
             });
         }
 
-        // Event Listener cho nút ẩn/hiện bình luận
-        if (toggleCommentsButton) { // Ensure button exists before attaching listener
+        if (toggleCommentsButton) {
             toggleCommentsButton.addEventListener('click', () => {
                 if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
                     commentsSection.style.display = 'block';
@@ -670,7 +635,7 @@
             });
         }
 
-        // Event Listeners cho các nút bình luận (chỉ khi người dùng đã đăng nhập và có quyền)
+       
         if (IS_AUTHENTICATED === 'true' && (LINK_PERMISSION === 'comment' || LINK_PERMISSION === 'edit')) {
             if (submitCommentButton) { // Ensure button exists before attaching listener
                 submitCommentButton.addEventListener('click', postComment);

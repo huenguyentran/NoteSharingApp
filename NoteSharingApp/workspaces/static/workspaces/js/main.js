@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Hàm để tạo một thẻ workspace
 function createWorkspaceCard(workspace) {
     return `
         <div class="workspace-card" data-workspace-id="${workspace.pk}">
@@ -37,7 +36,6 @@ function createWorkspaceCard(workspace) {
     `;
 }
 
-    // Hàm để lấy CSRF token từ cookie
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -53,7 +51,6 @@ function createWorkspaceCard(workspace) {
         return cookieValue;
     }
 
-    // Hàm tải và hiển thị workspaces
     function loadWorkspaces(url) {
         if (loadingMessage) {
             loadingMessage.style.display = 'block';
@@ -80,7 +77,6 @@ function createWorkspaceCard(workspace) {
                         workspacesHtml += createWorkspaceCard(workspace);
                     });
                     workspaceGrid.innerHTML = workspacesHtml;
-                    // Gắn event listeners cho các nút delete sau khi các thẻ đã được thêm vào DOM
                     addDeleteEventListeners(); 
                 } else {
                     const noWorkspacesMessage = `
@@ -102,36 +98,33 @@ function createWorkspaceCard(workspace) {
             });
     }
 
-    // HÀM MỚI ĐỂ THÊM LISTENER CHO CÁC FORM DELETE
     function addDeleteEventListeners() {
         document.querySelectorAll('.delete-workspace-form').forEach(form => {
-            // Đảm bảo event listener chỉ được thêm một lần
             if (form.dataset.listenerAdded) {
                 return;
             }
-            form.dataset.listenerAdded = 'true'; // Đánh dấu đã thêm listener
+            form.dataset.listenerAdded = 'true'; 
 
             form.addEventListener('submit', function(e) {
-                e.preventDefault(); // Ngăn chặn submit form mặc định
+                e.preventDefault(); 
 
                 const confirmDelete = confirm('Are you sure you want to delete this workspace?');
                 if (!confirmDelete) {
-                    return; // Người dùng hủy xóa
+                    return;
                 }
 
                 const deleteUrl = this.dataset.deleteUrl;
                 const csrfToken = this.querySelector('input[name="csrfmiddlewaretoken"]').value;
-                const workspaceCard = this.closest('.workspace-card'); // Tìm thẻ cha để xóa
+                const workspaceCard = this.closest('.workspace-card'); 
 
                 fetch(deleteUrl, {
-                    method: 'POST', // Django DeleteWorkspaceView đang mong đợi POST
+                    method: 'POST', 
                     headers: {
                         'X-CSRFToken': csrfToken,
-                        'Content-Type': 'application/json', // Quan trọng
-                        'X-Requested-With': 'XMLHttpRequest' // Cho Django biết đây là AJAX
+                        'Content-Type': 'application/json', 
+                        'X-Requested-With': 'XMLHttpRequest' 
                     },
-                    // Không cần body nếu không có dữ liệu thêm để gửi
-                    body: JSON.stringify({}) // Gửi một JSON rỗng nếu cần Content-Type application/json
+                    body: JSON.stringify({})
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -144,11 +137,10 @@ function createWorkspaceCard(workspace) {
                 .then(data => {
                     if (data.status === 'success') {
                         if (workspaceCard) {
-                            workspaceCard.remove(); // Xóa thẻ workspace khỏi DOM
+                            workspaceCard.remove();
                         }
                         alert(data.message); // Thông báo thành công
-                        // Tùy chọn: Tải lại danh sách workspaces để đảm bảo đồng bộ hoàn toàn
-                        // loadWorkspaces(apiUrl); 
+
                     } else {
                         alert('Lỗi: ' + (data.message || 'Không thể xóa workspace.'));
                     }
@@ -161,7 +153,6 @@ function createWorkspaceCard(workspace) {
         });
     }
 
-    // Gọi hàm tải workspace khi DOM đã sẵn sàng
     const urlParams = new URLSearchParams(window.location.search);
     const searchQuery = urlParams.get('q');
     let initialUrl = apiUrl;
@@ -170,7 +161,6 @@ function createWorkspaceCard(workspace) {
     }
     loadWorkspaces(initialUrl);
 
-    // Xử lý form tìm kiếm (nếu có)
     const searchForm = document.querySelector('.search-section form');
     if (searchForm) {
         searchForm.addEventListener('submit', function(e) {

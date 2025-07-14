@@ -23,7 +23,7 @@ class GoogleCallbackView(View):
         "code": code,
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
-        "redirect_uri": "http://127.0.0.1:8000/login/google/callback/",
+        "redirect_uri": "http://127.0.0.1:8000/auth/login/google/callback/",
         "grant_type": "authorization_code"
     }
     token_response = requests.post(token_url, data=data)

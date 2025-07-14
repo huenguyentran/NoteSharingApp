@@ -153,14 +153,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="container dashboard-container"> {# Using dashboard-container for consistent padding/width #}
-    <h1 class="dashboard-title">Welcome to My Workspaces!</h1> {# Changed title #}
+<div class="container dashboard-container"> 
+    <h1 class="dashboard-title">Welcome to My Workspaces!</h1> 
 
     {# Search Form - Adapted for Workspaces #}
     <div class="search-section">
-        <form action="{% url 'workspace_list' %}" method="get" class="form-inline justify-content-center"> {# Changed action URL #}
+        <form action="{% url 'workspace_list' %}" method="get" class="form-inline justify-content-center"> 
             <div class="input-group" style="width: 100%; max-width: 600px;">
-                <input type="text" class="form-control" placeholder="Search my workspaces..." name="q" value="{{ search_query }}"> {# Changed placeholder #}
+                <input type="text" class="form-control" placeholder="Search my workspaces..." name="q" value="{{ search_query }}"> 
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit">Search</button>
                 </div>
@@ -168,18 +168,16 @@
         </form>
     </div>
 
-    <div class="notes-section my-workspaces-section"> {# Using notes-section for styling, renamed for clarity #}
-        <div class="workspace-header"> {# Keep your existing header for title and button #}
-            <h2 class="section-title"><i class="fas fa-folder-open me-2"></i> My Workspaces</h2> {# Updated icon and title #}
+    <div class="notes-section my-workspaces-section"> 
+        <div class="workspace-header">
+            <h2 class="section-title"><i class="fas fa-folder-open me-2"></i> My Workspaces</h2> 
             <a href="{% url 'create_workspace' %}" class="btn btn-primary">Create New Workspace</a>
         </div>
 
-        <div class="workspace-card-grid"> {# New grid container #}
-            {# Đây là nơi dữ liệu workspace sẽ được main.js render vào #}
+        <div class="workspace-card-grid"> 
             <p id="workspace-loading-message">Loading workspace list...</p>
         </div>
 
-        {# Bạn có thể thêm một div hoặc nav trống để JS chèn các điều khiển phân trang vào đây nếu cần #}
         <nav id="workspace-pagination-controls" class="mt-4"></nav>
     </div>
 </div>

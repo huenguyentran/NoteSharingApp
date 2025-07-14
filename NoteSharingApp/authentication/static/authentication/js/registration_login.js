@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const li = document.createElement("li");
     li.classList.add(type);
     li.textContent = message;
-    box.innerHTML = ""; // Clear old messages
+    box.innerHTML = ""; 
     box.appendChild(li);
 
     setTimeout(() => {
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-  // Switch UI panel
+  
   const signUpButton = document.getElementById('signUp');
   const signInButton = document.getElementById('signIn');
   const container = document.querySelector('.container');
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Check form errors and switch to correct panel
+  
   const registerForm = document.querySelector('.sign-up-container form');
   const hasRegisterError = registerForm && registerForm.querySelector('.errorlist');
   if (hasRegisterError && container && !container.classList.contains('right-panel-active')) {

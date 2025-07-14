@@ -1,14 +1,4 @@
 
-// Cần: filter (của tôi theo title....) (API ở Note) 
-//+ Btn load more(hoặc là gì đó giống)_vì đang dùng phân trang
-//+ Tạo mới ghi chú -> direct sang trang tạo ghi chú
-//+ Xem ghi chú (trong trang xem ghi chú: chỉnh sửa (nếu đc) + set quyền truy cập + xem comment của ghi chú)
-
-
-
-
-
-// Gọi hàm fetch khi trang load
 window.addEventListener('DOMContentLoaded', async () => {
     const data = await fetchNotes();
     if (data && data.notes) {
@@ -34,9 +24,8 @@ async function fetchNotes({
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                // 'X-CSRFToken': getCookie('csrftoken'), // nếu cần
             },
-            credentials: 'include'  // gửi cookie để xác thực user login
+            credentials: 'include' 
         });
 
         if (!response.ok) {

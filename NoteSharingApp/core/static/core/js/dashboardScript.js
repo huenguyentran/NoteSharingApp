@@ -35,8 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (logoutButton) {
     logoutButton.addEventListener("click", (event) => {
       event.stopPropagation();
-      alert("Logging out..."); // For demo
-      // window.location.href = '{% url "logout" %}'; // Uncomment for actual Django logout
+      alert("Logging out..."); 
     });
   }
 });

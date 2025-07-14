@@ -13,9 +13,9 @@
     {% load static %}
 
     <style>
-        /* Sticky Footer CSS - START */
+        
         html, body {
-            height: 100%; /* Important: Make html and body take full viewport height */
+            height: 100%; 
             margin: 0;
         }
 
@@ -118,7 +118,7 @@
       </div>
     </nav>
 
-    <div class="content-wrapper"> {# NEW DIV: This will hold all content between navbar and footer #}
+    <div class="content-wrapper"> 
         <div class="container mt-4">
             {% if messages %}
                 {% for message in messages %}
@@ -133,7 +133,7 @@
         <main class="container mt-4">
           {% block content %} {% endblock %}
         </main>
-    </div> {# END OF NEW DIV: .content-wrapper #}
+    </div> 
 
     <footer class="mt-5 py-3 bg-light text-center text-muted">
         &copy; SE332.P22

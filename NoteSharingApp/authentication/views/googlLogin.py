@@ -13,7 +13,7 @@ class GoogleLoginView(View):
     base_url = "https://accounts.google.com/o/oauth2/auth"
     params = {
         "client_id": CLIENT_ID,
-        "redirect_uri": "http://127.0.0.1:8000/login/google/callback/",
+        "redirect_uri": "http://127.0.0.1:8000/auth/login/google/callback/",
         "response_type": "code",
         "scope": "openid email profile",
         "access_type": "offline",

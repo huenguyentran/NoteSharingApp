@@ -1,4 +1,3 @@
-{# D:\Learning\REPO_GITHUB\NoteSharingApp\NoteSharingApp\workspaces\templates\Member_List.html #}
 {% extends "base/base.html" %}
 {% load static %}
 
@@ -125,7 +124,7 @@
                 <h5 class="modal-title" id="editMemberModalLabel">Sửa quyền thành viên</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="edit-member-form" method="post" action=""> {# Action sẽ được set bằng JS #}
+            <form id="edit-member-form" method="post" action="">
                 {% csrf_token %}
                 <div class="modal-body">
                     <input type="hidden" id="edit-member-id" name="member_id">
@@ -163,7 +162,6 @@
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Hàm getCookie - Đảm bảo nó có ở đây vì chúng ta dùng AJAX
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -180,22 +178,20 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const workspacePk = parseInt("{{ workspace.pk }}"); // Đảm bảo đây là một số nguyên
+        const workspacePk = parseInt("{{ workspace.pk }}"); 
         const csrfToken = getCookie('csrftoken');
 
-        // --- Xử lý thêm thành viên bằng AJAX ---
         const addMemberForm = document.getElementById('add-member-form');
         if (addMemberForm) {
             addMemberForm.addEventListener('submit', function(e) {
-                e.preventDefault(); // Ngăn chặn submit form mặc định
+                e.preventDefault(); 
 
                 const formData = new FormData(this);
-                // Chuyển FormData sang đối tượng JSON để gửi đi dễ hơn
                 const data = {};
                 formData.forEach((value, key) => {
                     data[key] = value;
                 });
-                // Chuyển đổi giá trị checkbox isAdmin thành boolean
+
                 data['isAdmin'] = addMemberForm.querySelector('#id_isAdmin').checked;
 
 
@@ -204,17 +200,16 @@
                     headers: {
                         'X-CSRFToken': csrfToken,
                         'X-Requested-With': 'XMLHttpRequest',
-                        'Content-Type': 'application/json' // Quan trọng nếu gửi JSON
+                        'Content-Type': 'application/json' 
                     },
-                    body: JSON.stringify(data) // Gửi dữ liệu dưới dạng JSON
+                    body: JSON.stringify(data)
                 })
                 .then(response => {
-                    // Kiểm tra nếu response không phải JSON (ví dụ, lỗi server 500)
+                    
                     const contentType = response.headers.get("content-type");
                     if (contentType && contentType.indexOf("application/json") !== -1) {
                         return response.json();
                     } else {
-                        // Nếu không phải JSON, đọc raw text và báo lỗi
                         return response.text().then(text => {
                             console.error("Server responded with non-JSON:", text);
                             throw new Error("Server error, could not parse response.");
@@ -224,15 +219,13 @@
                 .then(data => {
                     if (data.success) {
                         alert(data.message);
-                        // Tải lại danh sách thành viên hoặc làm mới trang
-                        location.reload(); // Cách đơn giản để refresh danh sách
+                        
+                        location.reload(); 
                     } else {
-                        // Hiển thị lỗi từ server
                         let errorMessage = 'Lỗi khi thêm thành viên:';
                         if (data.error) {
                             errorMessage += `\n- ${data.error}`;
                         }
-                        // Nếu lỗi là từ form.errors.as_json()
                         if (data.errors) {
                             try {
                                 const parsedErrors = JSON.parse(data.errors);
@@ -253,7 +246,6 @@
             });
         }
 
-        // --- Xử lý xóa thành viên bằng AJAX ---
         document.getElementById('members-list').addEventListener('click', function(e) {
             if (e.target.classList.contains('delete-member-btn')) {
                 const button = e.target;
@@ -271,7 +263,6 @@
                     .then(data => {
                         if (data.success) {
                             alert(data.message);
-                            // Xóa phần tử thành viên khỏi DOM
                             const memberItem = button.closest('li.list-group-item');
                             if (memberItem) {
                                 memberItem.remove();
@@ -288,13 +279,12 @@
             }
         });
 
-        // --- Xử lý chỉnh sửa thành viên (Modal) ---
-        const editMemberModal = new bootstrap.Modal(document.getElementById('editMemberModal')); // Khởi tạo Bootstrap Modal
+        const editMemberModal = new bootstrap.Modal(document.getElementById('editMemberModal'));
         const editMemberModalElement = document.getElementById('editMemberModal');
 
         if (editMemberModalElement) {
             editMemberModalElement.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget; // Nút kích hoạt modal
+                const button = event.relatedTarget; 
                 const memberId = button.dataset.memberId;
                 const currentPermission = button.dataset.currentPermission;
                 const isAdmin = button.dataset.isAdmin === 'true';
@@ -305,7 +295,6 @@
                 const permissionEditRadio = document.getElementById('editPermissionEdit');
                 const isAdminCheckbox = document.getElementById('editIsAdmin');
 
-                // Set action URL cho form trong modal
                 modalForm.action = `{% url 'edit_workspace_member' workspace.pk 0 %}`.replace('0', memberId);
 
                 memberIdInput.value = memberId;
@@ -326,7 +315,7 @@
                 formData.forEach((value, key) => {
                     data[key] = value;
                 });
-                // Đảm bảo isAdmin được gửi dưới dạng boolean
+               
                 data['isAdmin'] = document.getElementById('editIsAdmin').checked;
 
 
@@ -353,7 +342,6 @@
                 .then(data => {
                     if (data.success) {
                         alert(data.message);
-                        // Đóng modal và tải lại trang để cập nhật danh sách
                         editMemberModal.hide();
                         location.reload();
                     } else {

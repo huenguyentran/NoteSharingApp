@@ -56,8 +56,7 @@
 <div class="container dashboard-container">
     <h1 class="dashboard-title">Welcome to My Notes!</h1>
 
-    {# Search Form #}
-    <div class="search-section"> {# Removed mb-4 here, moved to internal style #}
+    <div class="search-section"> 
         <form action="{% url 'dashboard' %}" method="get" class="form-inline justify-content-center">
             <div class="input-group" style="width: 100%; max-width: 600px;">
                 <input type="text" class="form-control" placeholder="Search my notes..." name="q" value="{{ search_query }}">
@@ -76,7 +75,7 @@
                     <div class="note-card">
                         <a href="{% url 'view_note' note.id %}" class="note-card-link">
                             <h3 class="note-card-title">{{ note.title }}</h3>
-                            <p class="note-card-content">{{ note.content|truncatechars:200 }}</p>
+                            <p class="note-card-content">{{ note.content|truncatechars:200|safe }}</p>
                             <div class="note-card-meta">
                                 <span>Created by: {{ note.create_by.username }}</span>
                                 <span>Created at: {{ note.created_at|date:"F j, Y H:i" }}</span>
@@ -87,7 +86,6 @@
                             <a href="{% url 'edit_note' note.id %}" class="btn btn-sm btn-info">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
-                            {# THAY THẾ NÚT DELETE BẰNG FORM NÀY #}
 <form action="{% url 'delete_note' note.id %}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this note?');">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm btn-danger">
@@ -111,7 +109,6 @@
             {% endif %}
         </div>
 
-        {# Pagination controls for My Notes #}
         {% if notes.has_other_pages %}
             <nav aria-label="My Notes pagination">
                 <ul class="pagination justify-content-center mt-4">
@@ -165,7 +162,7 @@
                     <div class="note-card shared-note-card">
                         <a href="{% url 'view_note' shared.note.id %}" class="note-card-link">
                             <h3 class="note-card-title">{{ shared.note.title }}</h3>
-                            <p class="note-card-content">{{ shared.note.content|truncatechars:200 }}</p>
+                            <p class="note-card-content">{{ shared.note.content|truncatechars:200|safe }}</p>
                             <div class="note-card-meta">
                                 <span>Shared by: {{ shared.share_by.username }}</span>
                                 <span>Created at: {{ shared.note.created_at|date:"F j, Y H:i" }}</span>
@@ -190,7 +187,6 @@
             {% endif %}
         </div>
 
-        {# Pagination controls for Shared Notes #}
         {% if shared_notes.has_other_pages %}
             <nav aria-label="Shared Notes pagination">
                 <ul class="pagination justify-content-center mt-4">

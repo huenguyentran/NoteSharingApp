@@ -387,14 +387,14 @@
             const showChangePasswordBtn = document.getElementById('show-change-password');
 
             function showSection(sectionToShow) {
-                // Remove active from all buttons
+                
                 document.querySelectorAll('.button-tab').forEach(btn => btn.classList.remove('active'));
 
-                // Hide all sections
+                
                 accountInfoSection.classList.remove('active');
                 changePasswordSection.classList.remove('active');
 
-                // Show the desired section and activate its button
+                
                 if (sectionToShow === 'account-info') {
                     accountInfoSection.classList.add('active');
                     showAccountInfoBtn.classList.add('active');
@@ -404,16 +404,16 @@
                 }
             }
 
-            // Event Listeners for the toggle buttons
+            
             showAccountInfoBtn.addEventListener('click', () => showSection('account-info'));
             showChangePasswordBtn.addEventListener('click', () => showSection('change-password'));
 
-            // Initial check for password form errors on load
+            
             const passwordFormErrorsExist = changePasswordSection.querySelector('.errorlist li') !== null;
             if (passwordFormErrorsExist) {
-                showSection('change-password'); // Show password form if there are errors
+                showSection('change-password'); 
             } else {
-                showSection('account-info'); // Default: show account info form
+                showSection('account-info'); 
             }
         });
     </script>
